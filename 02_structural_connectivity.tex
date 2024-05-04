@@ -10,7 +10,7 @@ The first section of this chapter describes the process of obtaining structural 
 
 \TODO[v \cite{yeh_mapping_2021} je hezký obrázek 2, možná překreslit a použít?]
 
-Structural connectome construction aims to give a macroscopic view of the brain structure. The problem consists of two parts. First, we have to define how to divide continuous grey matter into areas forming nodes. Second, we have to estimate the length and \enquote{strength} of the white matter fiber bundles connecting these nodes to add weighted edges to the graph.
+Structural connectome construction aims to give a macroscopic view of the brain structure. The problem consists of two parts. First, we have to define how to divide continuous grey matter into areas forming nodes. Second, we must estimate the length and \enquote{strength} of the white matter fiber bundles connecting these nodes to add weighted edges to the graph.
 
 There are various approaches how to obtain structural connectome, both invasive and non-invasive. In this work, we consider diffusion-weighted magnetic resonance imaging (DW-MRI) and tractography, which is a non-invasive approach. It is an indirect method (it does not explicitly measure the quantity of interest) and because of that, it suffers from several limitations, extensively described in a paper The Seven Deadly Sins of Measuring Brain Structural Connectivity Using Diffusion MRI Streamlines Fibre-Tracking by Calamante et al. \cite{calamante_seven_2019}. Because of that, it is error-prone, and the results should be treated with caution. \cite{sotiropoulos_building_2019}
 
@@ -18,7 +18,7 @@ There are various approaches how to obtain structural connectome, both invasive 
 
 As described in Section \ref{sec:MRI}, the result of the MRI is a 3D image. The next step is dividing continuous grey matter, represented by voxels in the 3D image, into a bearable number of discrete nodes. The resulting division is called parcellation, and the parcels/nodes are called regions of interest (ROI). 
 
-The simplest and most common approach how to obtain brain parcellation is using one of so-called anatomical atlases. An anatomical parcellation atlas is a standardized map of the brain based on anatomical features such as neural macrostructures (for example, sulci and gyri -- depressions or furrows and ridges on the cerebral cortex). Atlas-based image recognition works as follows: For a sample patient image, objects in the image can be recognized by registration of the sample image with the atlas image. By aligning corresponding points between the sample and atlas images, the labels assigned to regions in the atlas image can be transferred and applied to the sample image. \cite{sotiropoulos_building_2019, lawrence_standardizing_2021,chang_ljchangdartbrains_2020,rohrer_focused_2008} 
+The simplest and most common approach how to obtain brain parcellation is using one of the so-called anatomical atlases. An anatomical parcellation atlas is a standardized map of the brain based on anatomical features such as neural macrostructures (for example, sulci and gyri -- depressions or furrows and ridges on the cerebral cortex). Atlas-based image recognition works as follows: For a sample patient image, objects in the image can be recognized by registration of the sample image with the atlas image. By aligning corresponding points between the sample and atlas images, the labels assigned to regions in the atlas image can be transferred and applied to the sample image. \cite{sotiropoulos_building_2019, lawrence_standardizing_2021,chang_ljchangdartbrains_2020,rohrer_focused_2008} 
 
 There are various parcellation atlases stemming from various anatomical or functional perspectives. Created through a range of techniques, these parcellations enable various insights into the brain organization and network properties. However, the use of different parcellations across studies brings difficulties when comparing different studies and complicates reproducibility. The parcellations vary not only in the number of nodes but also in their positions. Because of that, results may vary; while one parcellation may reveal a particular effect, it might not be observable with another parcellation. \TODO[odkázat na část, kde budu psát o svých pokusech] \cite{sotiropoulos_building_2019, lawrence_standardizing_2021}
 
@@ -36,12 +36,12 @@ In this work, we came across several parcellations. This section provides their 
 
     \item \textbf{Yeo}\label{parc:Yeo} \cite{thomas_yeo_organization_2011}: The parcellation is based on the main functional areas in the brain and it was created using data from 1000 healthy subjects using a clustering approach. It divides the brain into 7 or 17 functional areas based on the version.
     
-    \item \textbf{Desikan–Killiany (DK)}\label{parc:DK}  \cite{desikan_automated_2006}: The DK parcellation is defined by gyri. It was generated using 40 subjects (30 healthy, 10 with Alzheimer’s disease). It consists of 68 regions, 34 per hemisphere. There is also an updated Desikan-Killiany-Tourville (DKT) \cite{klein_101_2012} version of this parcellation, which merges regions that were not clearly defined. Because of that, DKT has only 62 regions. There is often 
+    \item \textbf{Desikan–Killiany (DK)}\label{parc:DK}  \cite{desikan_automated_2006}: The DK parcellation is defined by gyri. It was generated using 40 subjects (30 healthy and 10 with Alzheimer’s disease). It consists of 68 regions, 34 per hemisphere. There is also an updated Desikan-Killiany-Tourville (DKT) \cite{klein_101_2012} version of this parcellation, which merges regions that were not clearly defined. Because of that, DKT has only 62 regions. There is often 
     
     \item \textbf{Schaefer200}\label{parc:Schaefer200}  \cite{schaefer_local-global_2018}: The parcellation is based on functional data from task-based fMRI and resting-state fMRI. There are several versions based on the level of detail, the number of parcels could range from 100 up to 1000. We used a version with 200 parcels. Each parcel also comes with Yeo's 7 Networks label.
     There is a parcellation is available on GitHub.\footnote{\url{https://github.com/ThomasYeoLab/CBIG/tree/master/stable_projects/brain_parcellation/Schaefer2018_LocalGlobal}}
     
-    \item \textbf{Glasser}\label{parc:Glasser}  \cite{glasser_multi-modal_2016}: The parcellation is defined using a multimodal approach, combining brain anatomy (myelin content and cortical thickness), function (MRI measured during different tasks), connectivity (resting-state functional MRI) and topography. It is constructed based on data from 210 healthy subjects. It consists of 360 regions, 180 per hemisphere, therefore it is the most detailed parcellation used in this work. It is sometimes denoted as MNI-HCP-MMP1.
+    \item \textbf{Glasser}\label{parc:Glasser}  \cite{glasser_multi-modal_2016}: The parcellation is defined using a multimodal approach, combining brain anatomy (myelin content and cortical thickness), function (MRI measured during different tasks), connectivity (resting-state functional MRI) and topography. It is constructed based on data from 210 healthy subjects. It consists of 360 regions, 180 per hemisphere, which is the most detailed parcellation used in this work. It is sometimes denoted as MNI-HCP-MMP1.
     
 \end{itemize}
 
@@ -64,39 +64,39 @@ The next step is defining a measure of connectivity between nodes. There are man
 
 \section{Group-average structural connectome construction}\label{sec:group-avg}
 
-Assume we already have a connectivity matrix for each subject in some group, edge weights representing streamline count. Because we want to work with the general structural properties of the brain, the question of constructing a group-representative connectome arises. The goal of group averaging is to increase the signal-to-noise ratio and obtain a clearer picture of brain network organization in general while preserving network properties that are consistently expressed at the subject level (such as edge length distribution). \cite{betzel_distance-dependent_2019} In this section, we present some possible approaches.
+Assume we already have a connectivity matrix for each subject in some group, edge weights representing streamline count. Because we want to work with the general structural properties of the brain, the question of constructing a group-representative connectome arises. Group averaging aims to increase the signal-to-noise ratio and obtain a clearer picture of brain network organization in general while preserving network properties that are consistently expressed at the subject level (such as edge length distribution). \cite{betzel_distance-dependent_2019} In this section, we present some possible approaches.
 
 \subsection{Simple average}\label{sec:average}
 
-The most straightforward idea is to average the streamline count between each pair of nodes across all the subjects. The main problem with this approach is that whenever there is at least one subject with an edge from A to B, the AB average is always non-zero, so it suggests that \enquote{there is a connection between these nodes}. As a result, the network density might be higher in the averaged connectome. That is an issue, especially because the process of obtaining streamline counts is erroneous, and the presence of one subject with this edge might be an accident.
+The most straightforward idea is to average the streamline count between each pair of nodes across all the subjects. The main problem with this approach is that whenever there is at least one subject with an edge from A to B, the AB average is always non-zero, suggesting that \enquote{there is a connection between these nodes}. As a result, the network density might be higher in the averaged connectome. That is an issue, especially because the process of obtaining streamline counts is erroneous, and the presence of one subject with this edge might be an accident.
 
 \subsection{Consensus thresholding}\label{sec:cons-thr}
 
 Consensus thresholding is the most common approach. It tries to preserve features consistently expressed at individual subjects' level while reducing noise. Threshold $\tau$ between 0 and 1 is specified\footnote{There is no consensus about the \enquote{correct} value of $\tau$ and it is often selected according to some heuristics. That might be a source of complications while attempting to compare connectomes across different studies.}, and the connections that are observed in at least $\tau$ fraction of subjects are kept. These connections are associated with weight, for example, the average number of streamlines among the subjects where the connection is present. The rest is set to 0. \cite{betzel_distance-dependent_2019}
 
-Betzel et al. point out that this approach favors shorter edges which are easier to reconstruct using tractograpy. Consequently, the distribution of edge lengths is different in average connectome than in the single subjects. According to their argumentation, the longer edges are less common, but despite of that, they have an important function in the brain. On the grounds of that, it is important to keep the edge length distribution because structural networks need long-distance connections. They propose their own method to prevent the issue, and we present it below. \cite{betzel_distance-dependent_2019} 
+Betzel et al. point out that this approach favors shorter edges which are easier to reconstruct using tractograpy. Consequently, the distribution of edge lengths is different in average connectome than in the single subjects. According to their argumentation, the longer edges are less common, but despite that, they have an important function in the brain. On the grounds of that, it is important to keep the edge length distribution because structural networks need long-distance connections. They propose their own method to prevent the issue, and we present it below. \cite{betzel_distance-dependent_2019} 
 
 \subsection{Distance-dependent consensus thresholding}\label{sec:dist-dep}
 
-This method aims to preserve edge length distribution. Assume the list of edges and their lengths.\footnote{Lengths might be Euclidean distances of the nodes or some sort of streamline average lengths.} Let us define $M$ as the total number of edges we want to keep in the consensus network. We define $M$ bins based on edge length percentiles. For each of them, we find all possible edges falling into that bin by length. For each bin, we choose the edge that is expressed most often across the subjects with ties broken by the greatest average weight (for example, streamline count). \cite{betzel_distance-dependent_2019} 
+This method aims to preserve edge length distribution. Assume the list of edges and their lengths. \footnote{Lengths might be Euclidean distances of the nodes or some sort of streamline average lengths.} Let us define $M$ as the total number of edges we want to keep in the consensus network. We define $M$ bins based on edge length percentiles. For each of them, we find all possible edges falling into that bin by length. For each bin, we choose the edge that is expressed most often across the subjects with ties broken by the greatest average weight (for example, streamline count). \cite{betzel_distance-dependent_2019} 
 
-We used \texttt{struct\_consensus} method from netneurotools package\footnote{\url{https://netneurotools.readthedocs.io/en/latest/index.html}} for Python for calculation of distance dependent thresholding during the work on this thesis.
+We used \texttt{struct\_consensus} method from netneurotools package\footnote{\url{https://netneurotools.readthedocs.io/en/latest/index.html}} for Python for calculation of distance-dependent thresholding during the work on this thesis.
 
 \subsection{Averaging by Rosen and Halgren}\label{sec:rh}
 
 We include the description of this specific method because it was used in one of the matrices we used in our experiments (see Section \TODO). We decided to follow the averaging methodology described by Rosen and Halgren in the paper \textit{A Whole-Cortex Probabilistic Diffusion Tractography Connectome} \cite{rosen_whole-cortex_2021} to get a matrix comparable with the one published by Rosen and Halgren with a different group of subjects.
 
-The principle is the same as a simple average, but it works with ratio of streamlines between two parcels to global number of streamlines instead of plain streamline counts. According to the paper, the values are first averaged across the subjects and than scaled such as the number of streamlines originating at parcel A and terminating at parcel B is divided by the total number of streamlines that either originate at parcel A or terminate at parcel B, excluding within-parcel connections. \cite{rosen_whole-cortex_2021} We used the equation below, where $SC$ is the final structural connectivity matrix and $m$ is an average of structural matrices across individual subjects.
+The principle is the same as a simple average, but it works with a ratio of streamlines between two parcels to a global number of streamlines instead of plain streamline counts. According to the paper, the values are first averaged across the subjects and then scaled such as the number of streamlines originating at parcel A and terminating at parcel B is divided by the total number of streamlines that either originate at parcel A or terminate at parcel B, excluding within-parcel connections. \cite{rosen_whole-cortex_2021} We used the equation below, where $SC$ is the final structural connectivity matrix and $m$ is an average of structural matrices across individual subjects.
 
 $$
 SC_{ij} = \frac{m_{ij}}{\sum_k m_{ik} + \sum_l m_{lj} - (m_{ii} - m_{jj})}
 $$
 
-The resulting matrix was sometimes non-symmetric even if the individual subject matrices were symmetric. It was caused by numerical instability in Python while working with small numbers. To overcame this problem, we added $SC = (SC + SC^T) /2$ to the end of the procedure.
+The resulting matrix was sometimes non-symmetric even if the individual subject matrices were symmetric. It was caused by numerical instability in Python while working with small numbers. To overcome this problem, we added $SC = (SC + SC^T) /2$ to the end of the procedure.
 
 \section{Structural connectomes description}
 
-All structural connectomes used in the thesis are described in this section. Some of them were published as group-averaged, while others came as a set of single-subject matrices. This section aims to present how they were constructed and compare their network properties.
+All structural connectomes used in the thesis are described in this section. Some of them were published as group-averaged, while others came as a set of single-subject matrices. This section presents how they were constructed and compares them. \TODO[mohla bych na nich porovnat i nějaké grafové metriky, modularitu třeba]
 
 \subsection{Enigma}
 
@@ -108,9 +108,9 @@ There is a disadvantage of Enigma structural matrices, they provide only edge we
 
 This dataset, created by Domhof et al. \cite{domhof_parcellation-based_2022}, is available online on EBRAINS platform.\footnote{\url{https://doi.org/10.25493/NVS8-XS5}} The repository provides individual connectomes for 200 subjects from the Human Connectome Project (HCP). For each subject, there is a matrix with streamline counts and a matrix with streamline lengths. They provide the connectomes in 20 different parcellations, including DK and Schaefer200 parcellation. 
 
-During the data investigation, we found that there are 70 ROIs in the matrices in DK parcellation. We removed the surplus ROIs to achieve compatibility with Enigma.
+During the data investigation, we found that there are 70 ROIs in the matrices in the DK parcellation. We removed the surplus ROIs to achieve compatibility with Enigma.
 
-We constructed the group-representative matrices using three approaches described in Section \ref{sec:group-avg}, namely simple average, distance dependent consensus thresholding and Rosen and Halgren method. For streamline lengths group average, we calculated an average considering only the values for which the corresponding weight was non-zero.
+We constructed the group-representative matrices using three approaches described in Section \ref{sec:group-avg}, namely simple average, distance-dependent consensus thresholding, and the Rosen and Halgren method. For streamline lengths group average, we calculated an average considering only the values for which the corresponding weight was non-zero.
 
 \subsection{Mica-Mics}
 
@@ -118,24 +118,25 @@ This dataset was published by Royer et al. \cite{royer_open_2021} on The Canadia
 
 \subsection{RosenHalgren}
 
-This dataset was published by Rosen and Halgren. \cite{rosen_whole-cortex_2021} It is again based on data from HCP, this time 1065 healthy adults. The group representative weights and lengths matrices are available on Zenodo\footnote{\url{https://doi.org/10.5281/zenodo.10150880}} in Glasser parcellation. The group-average was created following the averaging procedure described above. 
+This dataset was published by Rosen and Halgren. \cite{rosen_whole-cortex_2021} It is again based on data from HCP, this time 1065 healthy adults. The group representative weights and lengths matrices are available on Zenodo\footnote{\url{https://doi.org/10.5281/zenodo.10150880}} in Glasser parcellation. The group average was created following the averaging procedure described above. 
 
 \subsection{PyTepFit}
 
-The last structural connectivity weights and lengths matrices were taken from a Github repository\footnote{\url{https://github.com/GriffithsLab/PyTepFit/tree/66b94e488c82478e6f302015b6cd8e8d9d33792a/data}} of PyTepFit project by Momi et al\cite{momi_tms-evoked_2023}. These are already group-averaged (simple average) matrices with Schaefer200 parcellation created using data from 400 healthy subjects from the HCP project. 
+The last structural connectivity weights and lengths matrices were taken from a GitHub repository\footnote{\url{https://github.com/GriffithsLab/PyTepFit/tree/66b94e488c82478e6f302015b6cd8e8d9d33792a/data}} of PyTepFit project by Momi et al\cite{momi_tms-evoked_2023}. These are already group-averaged (simple average) matrices with Schaefer200 parcellation created using data from 400 healthy subjects from the HCP project. 
 
 \section{Structural connectomes comparison}
 
-The goal of this work is to investigate the relationship between structural connectivity and the function of the brain. Before we move to that in Chapter \ref{ch:ftract} and Chapter \ref{ch:pytepfit}, we should explore the structural connectivity itself. It is necessary to understand the nature of structural connectivity and how it differs depending on the data source and preprocessing method before we use it for the prediction of the function.
+This work aims to investigate the relationship between structural connectivity and brain function. Before we move to that in Chapter \ref{ch:ftract} and Chapter \ref{ch:pytepfit}, we should explore the structural connectivity itself. It is necessary to understand the nature of structural connectivity and how it differs depending on the data source and preprocessing method before we use it to predict the function. The previous sections described where the structural matrices come from and what they represent. Now, let us focus on the differences between various preprocessing methods introduced in Section \ref{sec:group-avg}.
 
 \subsection{Preprocessing methods}
 
-An important question is, what is the influence of different preprocessing methods on the resulting average connectome? In this section, we chose the Schaefer200 parcellation for the presentation of the results because we have the most data availible in this parcellation. \TODO[The results for the other parcellations are similar and could be seen TODO]
+In this section, we chose the Schaefer200 parcellation to present the results because we have the most data available in this parcellation. The results for the other parcellations are similar and can be seen in Appendix \ref{appendix:compare_sc}.
 
-Let us look at simple statistics about the connectivity matrices in Table \ref{tab:sc_stats}. First of all, Rosen and Halgren's method yields overall much lower values, because it uses the ratio of streamlines instead of streamline count. For the other methods, which all use streamline counts as edge weights, consensus thresholding has both the highest mean and median values, while  We also see that the distance-dependent consensus thresholding results in fewer edges than the other methods, which are all the same. 
+Let us first look at simple statistics about the connectivity matrices in Table \ref{tab:sc_stats}. First of all, Rosen and Halgren's method yields much lower values overall because it uses the ratio of streamlines instead of streamline count. For the other methods, which all use streamline counts as edge weights, consensus thresholding has both the highest mean and median values, while distance-dependent consensus thresholding yields the lowest mean and median.
 
+We also see that the distance-dependent consensus thresholding results in fewer edges than the other methods (the other methods are all the same). This is probably caused by the fact that the original matrices for individual subjects are quite dense; therefore, consensus thresholding keeps all edges, and for simple average and Rosen and Halgren's method, there is at least one non-zero edge across the subjects for each pair of nodes. Hence, the result is dense as well.
 
-\begin{table}
+\begin{table}[h!]
 \begin{subtable}{\textwidth}
     \centering
     \begin{tabular}{l | c | c | c }
@@ -147,7 +148,7 @@ Let us look at simple statistics about the connectivity matrices in Table \ref{t
         rh                 &40\,000	&0.002	&0.0002 \\
     \end{tabular}
     \caption{Domhof dataset}
-    \label{tab:sc_stats}
+    \label{tab:sc_stats_domhof}
 \end{subtable}
 
 \bigskip
@@ -163,17 +164,20 @@ Let us look at simple statistics about the connectivity matrices in Table \ref{t
         rh                 &40\,000	&0.001	&0.0001 \\
     \end{tabular}
     \caption{Mica-Mics dataset}
-    \label{tab:sc_stats}
+    \label{tab:sc_stats_mica}
 \end{subtable}
     \caption[Statistics for structural connectivity group average matrices]{Statistics for structural connectivity group average matrices, Schaefer200 parcellation. Preprocessing methods are: simple -- simple average \ref{sec:average}, cons -- consensus thresholding with $\tau=0.75$ \ref{sec:cons-thr}, dist -- distance-dependent consensus thresholding \ref{sec:dist-dep}, rh -- Rosen and Halgren's method \ref{sec:rh}. }
+    \label{tab:sc_stats}
 \end{table}
+
+In the following chapters, we investigate correlations between the structure and function. It raises the question of what the correlations are between matrices of structural connectivity themselves. We are interested in Spearman correlations later, so we discuss the Spearman correlation coefficient here for consistency. The results are shown in the Figure \ref{fig:sc_correlations}. We see that in our setting, there is basically 
 
 \begin{figure}[h!]
   \begin{center}
-    %\includegraphics[width=\textwidth]{images/compare_sc/sc_matrices_thesis.pdf}
+    \includegraphics[width=\textwidth]{images/nootebook_generated/comparing_sc_matrices/schaefer/correlations_all_matrices.pdf}
   \end{center}
-  \caption[\TODO]{\TODO}
-  \label{fig:sc_matrices}
+  \caption[Correlations of SC matrices (Schaefer200 parcellation)]{Spearman correlations ($p<0.05$ for all results) of structural connectivity matrices with Schaefer200 parcellation. }
+  \label{fig:sc_correlations}
 \end{figure}
 
 \subsubsection{Distribution of edge weights}
@@ -191,7 +195,7 @@ The connectome construction is
 
 \begin{figure}
   \begin{center}
-    \includegraphics[width=0.9\textwidth]{images/compare_sc/connectomes_brain_thesis.pdf}
+    \includegraphics[width=0.9\textwidth]{images/manually_created/connectomes_brain_thesis.pdf}
   \end{center}
   \caption[Connectome differences based on preprocessing method]{Connectome differences based on preprocessing method for Glasser parcellation, Mica-Mics dataset, edge weighted min-max normalized, plotted 3500 strongest edges.}
   \label{fig:edge_weights}
