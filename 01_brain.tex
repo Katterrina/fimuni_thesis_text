@@ -1,4 +1,4 @@
-\chapter{Data background}
+\chapter{Data background}\label{brain}
 
 In this chapter, let us briefly mention the most important parts of the biology of the brain and the physics behind the measuring techniques that are necessary to understand the rest of this thesis. In the beginning, it is important to emphasize that the brain is incredibly complex, and it is above the scope of this work to discuss its biological nature in detail. For further information, we highly recommend the book \textit{Neuroscience: exploring the brain} by Bear et al. \cite{bear_neuroscience_2016}
 
@@ -15,7 +15,7 @@ First of all, by the term \enquote{the brain}, we refer to the cerebrum, the lar
   \label{fig:brain_cerebrum_illustration}
 \end{figure}
 
-The brain consists of various types of cells. Let us focus only on neurons, specialized cells that transmit information through electrical and chemical signals, because they are responsible for cognitive processes such as thinking and memory formation. The neuron structure is shown in Figure \ref{fig:neuron_illustration}. It consists of a cell body, dendrites and an axon. Cell body acts as neuron's central processing unit, while dendrites and axon enable neuron to receive and transmit electrochemical signals. 
+The brain consists of various types of cells. Let us focus only on neurons, specialized cells that transmit information through electrical and chemical signals because they are responsible for cognitive processes such as thinking and memory formation. The neuron structure is shown in Figure \ref{fig:neuron_illustration}. It consists of a cell body, dendrites and an axon. The cell body acts as a neuron's central processing unit, while dendrites and axons enable neurons to receive and transmit electrochemical signals. 
 
 In the brain, neurons are organized as shown in Figure \ref{fig:brain_matter_illustration}. The cell bodies form a layer called gray matter on the brain's surface (2.5 mm thick on average). Gray matter is crucial for processing and integrating information within the brain. The axons connecting the cell bodies fill the inner part of the brain and form a tissue called white matter. White matter's primary function is rapidly transmitting signals between different areas of gray matter. The axons could be up to one meter long and form axonal bundles, where a few axons are organized in parallel. \cite{bear_neuroscience_2016}
 
@@ -73,7 +73,7 @@ The EEG measurement results in one time series per electrode placed on the skull
   \label{fig:EEG}
 \end{figure}
 
-\subsection{iEEG}
+\subsection{iEEG}\label{sec:iEEG}
 
 Intracranial electroencephalography (iEEG) is an invasive measuring method; the electrodes are implanted into the skull. Because of that, the source reconstruction is not necessary. It has much better spatial resolution than the scalp EEG described above and also a high signal-to-noise ratio because it measures the neuronal responses around its origin. On top of that, it enables direct electrical stimulation of the brain by applying precise electric pulses to specific brain areas.
 All of this makes iEEG one of the best methods to measure the dynamic changes of brain activity across time and space after a stimulation. However, due to ethical issues with implanting electrodes in the human brain, iEEG recordings are typically performed in drug-resistant epilepsy patients for clinical purposes, which makes iEEG less common than other noninvasive neuroimaging methods. In this thesis, we use data from the \textit{The Functional Brain Tractography project} (F-TRACT), which was also performed in epileptic patients. \cite{axmacher_what_2023,seguin_communication_2023}

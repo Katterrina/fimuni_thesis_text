@@ -1,25 +1,102 @@
-\chapter{Network communication models in neuroscience}
-
-\TODO[najít ještě nějaký hezký zdroj, ať tam necituji pořád ten jeden článek]
+\chapter{Network communication models}\label{ch:networks}
 
 Unveil the principles of communication and information processing in the brain is a primary goal of neuroscience. Network neuroscience views the brain as a complex network of anatomical connections. It tries to use tools rooted in graph theory to achieve this goal.  
 
-Organization of connectomes follows a number of complex topological properties, such as modular and hierarchical structure or small-world\footnote{Small-world network combine high clustering (nodes tend to form densely connected clusters) and short characteristic path length (spatially distant nodes are, on average, connected via a small number of edges). \cite{seguin_brain_2023}} architecture. They are believed to evolve in support of efficient neural communication. \cite{seguin_brain_2023,avena-koenigsberger_communication_2018}
+Organization of connectomes follows numerous complex topological properties, such as modular and hierarchical structure or small-world\footnote{Small-world network combine high clustering (nodes tend to form densely connected clusters) and short characteristic path length (spatially distant nodes are, on average, connected via a small number of edges). \cite{seguin_brain_2023}} architecture. They are believed to evolve in support of efficient neural communication. \cite{seguin_brain_2023,avena-koenigsberger_communication_2018}
 
-It is well known that structural connections allow direct communication between neural elements. However, the communication between brain regions that are not anatomically connected is not well understood. A growing number of communication models aim to provide insight into the communication process. The communication model is an algorithm \TODO \cite{seguin_brain_2023}
+It is well known that structural connections allow direct communication between neural elements. However, the communication between brain regions via indirect connections is not well understood. A growing number of communication models aim to provide insight into the communication process. The communication model is a theoretical framework used to understand how information flows within a network represented by a graph and is often represented using an algorithm that guides signals between network nodes. \cite{seguin_brain_2023}
 
-Currently used communication models were greatly summarized by Seguin, Sporns, and Zalesky in the review article \textit{Brain network communication: concepts, models and applications} published in 2023. \cite{seguin_brain_2023} We present the main ideas of network communication models in this chapter. \TODO[asi napsat, že popíšu jenom ty, které ]
+Currently used communication models were greatly summarized by Seguin, Sporns, and Zalesky in the review article \textit{Brain network communication: concepts, models and applications} published in 2023. \cite{seguin_brain_2023} We present the main ideas of network communication models in this chapter. There are many communication models; we describe only the ones used in the rest of the thesis in more detail.
 
-\subsection{From decentralized to centralized communication models}
+Our goal regarding the rest of the work is to use structural connectome as a starting point for the calculation of matrices representing \uv{how easy or fast} it is to transfer information between all pairs of nodes, assuming each of the communication models. We later investigate the correlation between those matrices and functional data. Hence we explain how to calculate the matrices for the selected communication models.
 
-Following the methodology proposed in the paper, we organize the models into three groups: diffusion processes, parametric models, and routing protocols. The models are presented from decentralized to centralized. 
+We used netneurotools, a package for Python, for the practical calculation of the matrices; all the communication models discussed below are implemented in the package.
 
-The degree of centralization is an important feature of a network communication model. \TODO[co to je a proč]
+\section{Decentralized vs centralized communication models}
 
-% various communication models on toy networks are placed along a spectrum of information, qualitatively representing how much (if any) information is needed for each communication process to take place.
+The degree of centralization is an important feature of a network communication model. It refers to the extent to which the influence over communication flows is concentrated within some authority that knows about the whole network topology versus being distributed across the network. \cite{seguin_brain_2023}
 
-\subsection{Diffusion processes}
+What does it mean for us? The human brain is believed to be a decentralized system in which individual elements such as neurons probably do not have complete information about the whole brain network in which they are embedded. \cite{seguin_brain_2023} From another point of view, brain organization and communication evolved to minimize the metabolical cost. \cite{bullmore_economy_2012} As stated in paper by Avena-Koenigsberger et al. from 2018 \cite{avena-koenigsberger_communication_2018}, p. 19:
+\begin{quote}
+The shortest path length is thought to be an indicator of the ease with which signals can be transmitted between two nodes. In neural systems that communicate via electrochemical transmission, minimizing the number of synapses between any two neuronal elements (that is, path length) is intuitively desirable. Longer paths are more susceptible to noise, are more likely to involve a greater number of distinct processing steps, incur longer transmission delays, and are energetically (metabolically) more expensive to construct and use.
+\end{quote}
+However, to send the information via the shortest path, the neurons should have information about their surroundings and the path lengths in the brain. The question is, how much do the neurons \uv{know} what path is the shortest one? And generally, do centralized models better explain communication within the brain than decentralized ones?
 
-\subsection{Parametric models}
+\section{Diffusion processes}
 
-\subsection{Routing protocols}
+Diffusion processes build on the idea that individual nodes do not have knowledge about overall network architecture. They propose a concept of signal propagation via broadcasting and random walks. Therefore, the signal transmission requires more signal forwarding to send messages between two nodes, and thus, it might suffer from higher delays and higher energetic (metabolic) costs. \cite{seguin_brain_2023}
+
+\subsection{Diffusion efficiency (DIF)}
+
+Diffusion efficiency assumes that information in the brain is distributed via unbiased random walks. The signal under this assumption travels from node $i$ randomly to one of its neighbors $j$ with probability proportional to the weight of edge to $j$. The transmission continues following this rule until the target node is reached. \cite{seguin_communication_2023,seguin_brain_2023}
+
+Formally, the probability of transmission from $i$ to $j$ in one step is given by transition probability matrix $T$ defined as follows 
+$$
+T_{ij} = \frac{W_{ij}}{\sum_{n=1}^N W_{in}}
+$$
+where $W$ is the matrix of structural connectivity weights, and $N$ is the number of nodes. We can analytically compute the average number of steps needed by a random walker to get from $i$ to $j$ using the matrix $T$. Let us denote it $H_{ij}$. Diffusion efficiency matrix $DIF$ is then computed as 
+$$DIF_{ij}=1/H_{ij}.$$
+
+\subsection{Communicability (COM)}
+
+Communicability is a communication model based on broadcasting. That means we do not assume signal propagation from a node $i$ to one other node $j$, but simultaneously to many other nodes in each step. Communicability assumes that each node always propagates the signal to all its neighbors. It does not matter if some of the neighbors already received the signal earlier. \cite{seguin_communication_2023,seguin_brain_2023}
+
+We use the formal definition of communicability in weighted networks by Crofts and Higham \cite{crofts_weighted_2009}. Let $W$ be the matrix of weights. Let us define the generalized degree of a node $i$ as $d_i = \sum_{k=1}^N W_{ik}$ where $N$ is the total number of nodes. The normalized matrix $W'$ is then defined as 
+$$
+W'_{ij} = \frac{W_{ij}}{\sqrt{d_i}\sqrt{d_j}}
+$$
+By analogy, the communicability $COM$ between two nodes $i$ and $j$ is defined ad
+$$
+COM_{ij} = e^{W'_{ij}}.
+$$
+
+Concluding remark to communicability, according to a paper by Seguin et al. from 2023 \cite{seguin_brain_2023}, p. 563:
+\begin{quote}
+Communicability is a popular measure in network neuroscience, constituting one of the most commonly adopted alternatives to shortest-path measures.
+\end{quote}
+
+\subsection{Search information (SI)}
+
+Search information is based on the notion of random walks. It quantifies the amount of information, measured in information bits, needed to bias the random walker representing the signal in the network to take the shortest path between two nodes. The model relates to the accessibility of short and efficient paths under the assumption of the diffusive communication model. \cite{seguin_communication_2023,seguin_brain_2023}
+
+How does it work? Let us assume the information needs to be transferred from node $i$ to node $j$ through the shortest path, expecting that if there are more shortest paths, any of them could be selected. It is necessary to know which edge to take in each node along the path. Without any prior knowledge, the information needed to select an exit from a node with $k$ unweighted adjacent edges is $\log_2(k)$. \cite{rosvall_searchability_2005,rosvall_networks_2005}
+
+For each path $p(i,j)$ from $i$ to $j$, the probability that the random walker follows this path is 
+$$
+P[p(i,j)] = \frac{1}{k_i}\prod_{v \in p(i,j)}\frac{1}{k_v-1}.
+$$
+There is $k_v-1$ instead of $k_v$ because we know which path was taken on the way to $j$. Therefore, we can reduce the number of possible exit edges by one. As a result, the probability of getting from node $i$ to node $j$ using any of the shortest paths is 
+$$
+P_{ij} = \sum_{\{p(i,j)\}}P[p(i,j)] 
+$$
+where $\{p(i,j)\}$ is a set of all shortest paths connecting $i$ and $j$. Using this, we can define the search information matrix $SI$ as 
+$$
+SI_{ij}=-\log_2 P_{ij}.
+$$
+This could be explained as \uv{the total information value of knowing any of the shortest paths between $i$ and $j$}. For the weighted case, we can just replace the probability of taking a specific exit from node $i$ ($\frac{1}{k_i-1}$ where $k_i$ is the number of edges adjacent to $i$) by $\frac{w_e}{w_i-w_{in}}$ where $w_e$ is the weight of the specific edge, $w_i$ is the sum of weights of all edges adjacent to $i$ and $w_{in}$ is the weight of the edge taken when arriving to the node. 
+
+\section{Routing protocols}
+
+Routing protocols are grounded in the idea that messages are routed through the network using single, selectively accessed paths. It builds up on the fact that the transmission of information is costly, and thus, the brain evolved to optimize it. The most widely used communication model in brain networks, shortest path routing belongs to this group. \cite{seguin_brain_2023}
+
+However, knowledge about network topology is highly unlikely in real neural systems. Besides, if the communication relies exclusively on the shortest paths, it excludes near-optimal alternatives. \cite{avena-koenigsberger_communication_2018}
+
+\subsection{Shortest path efficiency (SPE)}
+
+According to Seguin et al. \cite{seguin_brain_2023}, the shortest path routing model is the most common and widely used in network neuroscience. The key assumption of this model is that the signals in the brain follow the shortest paths because it is the most efficient option.
+
+The calculation of shortest path efficiency is pretty straightforward. First, the shortest paths are calculated between all node pairs $\Lambda^*_{ij}$. The shortest path efficiency $SPE$ is then defined as $SPE_{ij}=\frac{1}{\Lambda^*_{ij}}$.
+
+\subsection{Navigation efficiency (NAV)}
+
+Navigation routing protocol uses a greedy strategy to transmit the signal \uv{in the right direction} based on the spatial distribution of the nodes. Let us assume the signal travels from node $i$ to $j$. For each node along the way starting from $i$, we identify its neighbor with the smallest Euclidean distance to $j$, and progress to it. The process is repeated until $j$ is reached and we sum the lengths of edges along the path, denoting the sum $\Lambda_{ij}$. Then, same as for the shortest path efficiency, navigation efficiency is defined as $SPE_{ij}=1/\Lambda_{ij}$.
+
+Note that this protocol uses 
+
+\section{Parametric models}
+
+Concerning the degree of centralization, parametric models lie between routing protocols and diffusion processes. Their crucial characteristic is the presence of a tunable parameter. Depending on its value, the model can act as a routing protocol, diffusion process, or something between these two extremes. \cite{seguin_brain_2023}
+
+An example of a parametric model is a biased random walk model, where the random walker is biased by some topological properties of the network or domain-specific properties of the nodes. This could be implemented in the structural connectivity network of the brain as a parameter enabling the individual nodes to \uv{know} more and more about their neighborhood and utilize this knowledge to navigate the random walker. \cite{seguin_brain_2023}
+
+We did not use any parameter model in this work because they require careful parameter tuning, and we wanted to try more different models to obtain a broad picture rather than closely examine the parameters of one parametric model. This might be an interesting direction for future research.
