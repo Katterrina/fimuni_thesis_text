@@ -1,8 +1,10 @@
-\chapter{Structural connectivity variations and robustness}\label{ch:SC_indepth}
+\chapter{Connectomes variations and  robustness}\label{ch:SC_indepth}
 
-\TODO[ukázka pro F-Tract, long i short, popsat min\_streamlines a ED20]
+All the presented results up to this point (with an exception in Chapter \ref{ch:ftract}) were obtained with structural connectivity matrices created using Rosen and Halgren's averaging method from Mica-Mics dataset. Let us look closer at the possible group-averaging methods and possible variations in structural matrices based on the data source and group-averaging methods. 
 
-All the presented results up to this point were obtained 
+\section{Minimal number of streamlines}
+
+Having a structural connectivity matrix containing streamline counts as described in Section \ref{sec:edge_estimation}, we have to decide if it is enough to have one streamline connecting two regions to consider it as an edge. For example, Seguin et al. \cite{seguin_communication_2023} decided to prune connections comprising fewer than 5 streamlines. They justify this step with the high false positive rate of probabilistic tractography. Following their example, we did the same. In all the following group-averaging methods, we first discarded subject-level edges with less than 5 streamlines.
 
 \section{Group-average structural connectome construction}\label{sec:group-avg}
 
@@ -36,37 +38,39 @@ $$
 
 The resulting matrix was sometimes non-symmetric even if the individual subject matrices were symmetric. It was caused by numerical instability in Python while working with small numbers. To overcome this problem, we added $SC = (SC + SC^T) /2$ to the end of the procedure.
 
-\section{Structural connectomes prunning}
+\section{Structural connectome density}
 
-\TODO[že je tam density všude 25 a proč]
+Seguin et al. \cite{seguin_communication_2023} in the paper \textit{Communication dynamics in the human connectome shape the cortex-wide propagation of direct electrical stimulation} propose one more step in connectome construction. They prune the group-averaged connectivity matrices keeping the edges with the highest weight such that the density of the connectome is 25\%. 
+
+The density of structural connectivity matrices differs across da\-ta\-sets, it depends on the individual connectome construction parameters. For example, the average connection density in Mica-Mics dataset is  84.1\% across subjects. \cite{seguin_communication_2023} If we want to get comparable results, it is necessary to start with connectomes with similar density. Because of that, we decided to threshold all the group-average matrices and keep approximately 25\% strongest edges.\footnote{Seguin et al. thresholded the subject-level matrices, but we do not have those available for some of the datasets. Because of that, we decided to do this step later to get the same density for all structural connectivity matrices.}
 
 \section{Structural connectomes description}
 
-All structural connectomes used in the thesis are described in this section. Some of them were published as group-averaged, while others came as a set of single-subject matrices. This section presents how they were constructed and compares them. 
+All structural connectomes used during our work are described in this section. Some of them were published as group-averaged, while others came as a set of single-subject matrices. This section presents how they were constructed and compares them. 
 
-\subsection{Enigma}
+\subsection{Enigma}\label{sec:enigma}
 
 The first source of structural connectivity matrices for this thesis is a Python package ENIGMA TOOLBOX\footnote{\url{https://enigma-toolbox.readthedocs.io/en/latest/}, accessed 1. 5. 2024} developed by S. Larivière and B. Bernhardt from MICA Lab - Montreal Neurological Institute \cite{lariviere_enigma_2020}. It provides an option to load structural connectivity matrices in several parcellations. The original data were taken from 207 healthy adults from the HCP dataset.\footnote{The Human Connectome Project (HCP) is a large scientific effort focused on mapping the connectivity of the human brain. The HCP datasets are openly available to researchers at \url{https://www.humanconnectome.org/}. \cite{van_essen_human_2012}} The preprocessing pipeline is described in detail in a paper \textit{The ENIGMA Toolbox: Cross-disorder integration and multiscale neural contextualization of multisite neuroimaging datasets} by Larivière et al. For our application, it is important to note that the group average structural connectome was obtained using a distance-dependent thresholding procedure described above~\ref{sec:dist-dep}. Afterward, it was log-transformed. The structural connectomes are available in DK, Glasser, and Schaefer parcellations. 
 
 There is a disadvantage of Enigma structural matrices, they provide only edge weights, not lengths. It is also important to mention that for Glasser and Schaefer parcellations, there are no zero weights in the matrix, but most of it is filled with ones (which is not the case for the DK parcellation) -- connectome is a complete graph with weights mostly one.
 
-\subsection{Domhof}
+\subsection{Domhof}\label{sec:domhof}
 
-This dataset, created by Domhof et al. \cite{domhof_parcellation-based_2022}, is available online on EBRAINS platform.\footnote{\url{https://doi.org/10.25493/NVS8-XS5}} The repository provides individual connectomes for 200 subjects from the Human Connectome Project (HCP). For each subject, there is a matrix with streamline counts and a matrix with streamline lengths. They provide the connectomes in 20 different parcellations, including DK and Schaefer200 parcellation. 
+This dataset, created by Domhof et al. \cite{domhof_parcellation-based_2022}, is available online on EBRAINS platform.\footnote{\url{https://doi.org/10.25493/NVS8-XS5}} The repository provides individual connectomes for 200 subjects from the Human Connectome Project (HCP). For each subject, there is a matrix with streamline counts and a matrix with streamline lengths. They provide the connectomes in 20 different parcellations, including DK and Schaefer200 parcellations. 
 
 During the data investigation, we found that there are 70 ROIs in the matrices in the DK parcellation. We removed the surplus ROIs to achieve compatibility with Enigma.
 
 We constructed the group-representative matrices using three approaches described in Section~\ref{sec:group-avg}, namely simple average, distance-dependent consensus thresholding, and the Rosen and Halgren method. For streamline lengths group average, we calculated an average considering only the values for which the corresponding weight was non-zero.
 
-\subsection{Mica-Mics}
+\subsection{Mica-Mics}\label{sec:mica}
 
 This dataset was published by Royer et al. \cite{royer_open_2021} on The Canadian Open Neuroscience Platform.\footnote{\url{https://n2t.net/ark:/70798/d72xnk2wd397j190qv}} It consists of multimodal data from 50 healthy adult subjects and there are Glasser and Schaefer200 parcellations available. We constructed the group-representative matrices for both of them using the same approaches as for the Domhof dataset.
 
-\subsection{RosenHalgren}
+\subsection{RosenHalgren}\label{sec:rhdata}
 
 This dataset was published by Rosen and Halgren. \cite{rosen_whole-cortex_2021} It is again based on data from HCP, this time 1065 healthy adults. The group representative weights and lengths matrices are available on Zenodo\footnote{\url{https://doi.org/10.5281/zenodo.10150880}} in Glasser parcellation. The group average was created following the averaging procedure described above. 
 
-\subsection{PyTepFit}
+\subsection{PyTepFit}\label{sec:pytepdata}
 
 The last structural connectivity weights and lengths matrices were taken from a GitHub repository\footnote{\url{https://github.com/GriffithsLab/PyTepFit/tree/66b94e488c82478e6f302015b6cd8e8d9d33792a/data}} of PyTepFit project by Momi~et~al. \cite{momi_tms-evoked_2023}. These are already group-averaged (simple average) matrices with Schaefer200 parcellation created using data from 400 healthy subjects from the HCP project. 
 
@@ -74,74 +78,35 @@ The last structural connectivity weights and lengths matrices were taken from a 
 
 This work aims to investigate the relationship between structural connectivity and brain function. Before we move to that in Chapter~\ref{ch:ftract} and Chapter~\ref{ch:pytepfit}, we should explore the structural connectivity itself. It is necessary to understand the nature of structural connectivity and how it differs depending on the data source and preprocessing method before we use it to predict the function. The previous sections described where the structural matrices come from and what they represent. Now, let us focus on the differences between various preprocessing methods introduced in Section~\ref{sec:group-avg}.
 
-In this section, we chose the Schaefer200 parcellation to present the results because we have the most data available in this parcellation. If not mentioned otherwise, the results for the other parcellations are similar and can be found in the thesis attachments. \TODO
+In this section, we chose the Schaefer200 parcellation to present the results because we have the most data available in this parcellation. \TODO[jiné parcelace]
 
 \subsection{Overall comparison}
 
-\TODO[odsud dál zkontrolovat a přepsat!]
-
-Let us first look at simple statistics about the connectivity matrices in Table~\ref{tab:sc_stats}. First of all, Rosen and Halgren's method yields much lower values overall because it uses the ratio of streamlines instead of streamline count. For the other methods, which all use streamline counts as edge weights, consensus thresholding has both the highest mean and median values, while distance-dependent consensus thresholding yields the lowest mean and median.
-
-We also see that the distance-dependent consensus thresholding results in fewer edges than the other methods (the other methods are all the same). This is probably caused by the fact that the original matrices for individual subjects are quite dense; therefore, consensus thresholding keeps all edges. For simple average and Rosen and Halgren's method, there is at least one non-zero edge across the subjects for each pair of nodes. Hence, the result is dense as well. We used a function from netneurotools to calculate distance-dependent consensus thresholding, and we did not change the default settings, which is why the graph density is lower. We could have set the number of bins equal to the number of desired edges; in the default setting, it is inferred from the data.
-
-\begin{table}[h!]
-\begin{subtable}{\textwidth}
-    \centering
-    \begin{tabular}{l | c | c | c }
-        preprocessing & edges count & mean	& median\\
-        \midrule
-        simple             &40\,000  &239.4  &15.6	\\
-        cons ($\tau=0.75$) &40\,000	&240.0	&16.2	\\
-        dist               &33\,750	&239.1	&15.5	\\
-        rh                 &40\,000	&0.002	&0.0002 \\
-    \end{tabular}
-    \caption{Domhof dataset}
-    \label{tab:sc_stats_domhof}
-\end{subtable}
-
-\bigskip
-
-\begin{subtable}{\textwidth}
-    \centering
-    \begin{tabular}{l | c | c | c }
-        preprocessing & edges count & mean	& median\\
-        \midrule
-        simple             &40\,000  &232.2	&38.6	\\
-        cons ($\tau=0.75$) &40\,000	&232.7	&38.9	\\
-        dist               &38\,336	&231.6	&37.8	\\
-        rh                 &40\,000	&0.001	&0.0001 \\
-    \end{tabular}
-    \caption{Mica-Mics dataset}
-    \label{tab:sc_stats_mica}
-\end{subtable}
-    \caption[Statistics for structural connectivity group average matrices]{Statistics for structural connectivity group average matrices, Schaefer200 parcellation. Preprocessing methods are: simple -- simple average~\ref{sec:average}, cons -- consensus thresholding with $\tau=0.75$~\ref{sec:cons-thr}, dist -- distance-dependent consensus thresholding~\ref{sec:dist-dep}, rh -- Rosen and Halgren's method~\ref{sec:rh}. }
-    \label{tab:sc_stats}
-\end{table}
-
 In the following chapters, we investigate correlations between the structure and function. It raises the question of what the correlations are between matrices of structural connectivity weights themselves.\footnote{We calculated the lengths in the same way for all preprocessing methods, so we do not compare lengths here.} We are interested in Spearman correlations later, so we discuss the Spearman correlation coefficient here for consistency. The results are shown in the Figure~\ref{fig:sc_correlations}. 
 
-Regardless of the preprocessing method, there are higher correlations between Domhof and Mica-Mics matrices than the others. Within these datasets, we see that in our setting there is basically no difference between simple average and consensus thresholding. As mentioned above, it is because the original individual-subject matrices are dense. It also holds for both Domhof and Mica-Mics datasets that the matrix created using a distance-dependent consensus thresholding method has the lowest correlations with the others.
+Regardless of the preprocessing method, there are higher correlations between Domhof and Mica-Mics matrices than the others. Within these datasets, we see that in our setting there is basically no difference between simple average and consensus thresholding. This is because the original individual-subject matrices are dense, so the probability that there is an edge in many of the subjects is high. It also holds for both Domhof and Mica-Mics datasets that the matrix created using a distance-dependent consensus thresholding method has the lowest correlations with the others.
 
 \begin{figure}[p]
   \begin{center}
-    \includegraphics[width=\textwidth]{images/nootebook_generated/comparing_sc_matrices/schaefer/correlations_all_matrices_Spearman.pdf}
+    \includegraphics[width=\textwidth]{images/nootebook_generated/sc_comparison/schaefer/5/0.25/correlations_all_matrices_Spearman.pdf}
   \end{center}
   \caption[Correlations of SC matrices (Schaefer200 parcellation)]{Spearman correlations ($p<0.05$ for all results) of structural connectivity matrices with Schaefer200 parcellation. }
   \label{fig:sc_correlations}
 \end{figure}
 
+
 \subsection{Distribution of edge weights}
 
-Another question is if the preprocessing method influences the distribution of edge weights. We can see in Figure~\ref{fig:edge_weights_schaefer} for the Mica-Mics dataset that the simple average is again nearly the same as consensus thresholding, and they both result in a higher number of weaker edges. Rosen and Halgren's method yields proportionally a higher number of stronger edges than the other methods, followed by distance-dependent consensus thresholding. The results for the Domhof dataset look similar.
+Another question is if the preprocessing method influences the distribution of edge weights. We can see in Figure~\ref{fig:edge_weights_schaefer} for the Mica-Mics dataset that the simple average is again nearly the same as consensus thresholding, and they both result in a higher number of weaker edges than Rosen and Halgren's. Rosen and Halgren's method yields proportionally a higher number of stronger edges than the other methods. The results for the Domhof dataset look similar, only the distribution for distance-dependent consensus thresholding is slightly shifted to the higher weights.
 
 However, there is a difference if we look at different parcellations. Figure~\ref{fig:edge_weights_glasser} differs from~\ref{fig:edge_weights_schaefer} only in the parcellation, but there are much bigger differences in the edge weights distributions based on the preprocessing method. Especially there is a difference between simple average and consensus thresholding, the former having a higher number of weaker edges. Rosen and Halgren's method still gives a higher number of stronger edges than the other methods, and the effect is even more visible in this case.
 
-The reason for the difference between the parcellations is probably caused by their different granularity. Let us remind that Schafer200 has 200 ROIs, while Glasser 360. We use the same DW-MRI data as a basis for connectomes with both parcellations. In the case of finer parcellation, the resulting connectome may exhibit lower density. This is because if there are only a few streamlines connecting certain ROIs, further subdivisions of these regions could lead to the absence of streamlines between some pairs of ROIs in the subdivision. Therefore there are more zeros in the connectivity matrices for individual subjects for Glasser parcellation. Because of that, there is a higher number of weaker edges in the simple group average because we are averaging the zeros as well.\footnote{The effect is there even if the density is the same as for the consensus thresholding method, because we are averaging only the non-zero values during the consensus thresholding connectome calculation.}
+The reason for the difference between the parcellations is probably caused by their different granularity. Let us remind you that Schafer200 has 200 ROIs, while Glasser 360. We use the same DW-MRI data as a basis for connectomes with both parcellations. In the case of finer parcellation, the resulting connectome may exhibit lower density. This is because if there are only a few streamlines connecting certain ROIs, further subdivisions of these regions could lead to the absence of streamlines between some pairs of ROIs in the subdivision. Therefore there are more zeros in the connectivity matrices for individual subjects for Glasser parcellation. Because of that, there is a higher number of weaker edges in the simple group average because we are averaging the zeros as well. \footnote{The effect is there even if the density is the same as for the consensus thresholding method because we are averaging only the non-zero values during the consensus thresholding connectome calculation.}
 
 \begin{figure}[p]
 \begin{subfigure}{\textwidth}
       \begin{center}
-    \includegraphics[width=\textwidth]{images/nootebook_generated/comparing_sc_matrices/schaefer/Probability_of_edge_weights_in_SC_Mica-Mics_based_on_group-averaging_methods_(matrices_min-max_normalized).pdf}
+    \includegraphics[width=\textwidth]{images/nootebook_generated/sc_comparison/schaefer/5/0.25/Probability_of_edge_weights_in_SC_Mica-Mics_based_on_group-averaging_methods_(matrices_min-max_normalized).pdf}
   \end{center}
   \caption{Schaefer200 parcellation}
   \label{fig:edge_weights_schaefer}
@@ -151,52 +116,118 @@ The reason for the difference between the parcellations is probably caused by th
 
 \begin{subfigure}{\textwidth}
       \begin{center}
-    \includegraphics[width=\textwidth]{images/nootebook_generated/comparing_sc_matrices/MNI-HCP-MMP1/Probability_of_edge_weights_in_SC_Mica-Mics_based_on_group-averaging_methods_(matrices_min-max_normalized).pdf}
+    \includegraphics[width=\textwidth]{images/nootebook_generated/sc_comparison/MNI-HCP-MMP1/5/0.25/Probability_of_edge_weights_in_SC_Mica-Mics_based_on_group-averaging_methods_(matrices_min-max_normalized).pdf}
   \end{center}
   \caption{Glasser parcellation}
   \label{fig:edge_weights_glasser}
 \end{subfigure}
-\caption[Edge weights distribution per preprocessing method]{Edge weights distribution per preprocessing method for Mica-Mics dataset and Schaefer200 and Glasser parcellations. All matrices were min-max normalized because the weights of the rh method are not comparable with the others otherwise. The y-axis shows a probability (not count) for better comparability because the number of edges differs for the cons method.}
+\caption[Edge weights distribution per preprocessing method]{Edge weights distribution per preprocessing method for Mica-Mics dataset and Schaefer200 and Glasser parcellations. All matrices were min-max normalized because the weights of the rh method are not comparable with the others otherwise. The y-axis shows a probability (not count) for better comparability because the number of edges differs for the \texttt{dist} method.}
 \end{figure}
 
 \begin{figure}[p]
   \begin{center}
-    %\includegraphics[width=0.9\textwidth]{images/manually_created/connectomes_brain_thesis.pdf}
+    \includegraphics[width=\textwidth]{images/manually_created/mica.png}
   \end{center}
-  \caption[Connectomes based on preprocessing method]{Connectomes based on a preprocessing method for Glasser parcellation, Mica-Mics dataset, edge weights log-transformed and min-max normalized, plotted 3500 strongest edges. Common colorscale, darker color denotes stronger edges.}
+  \caption[Connectomes based on preprocessing method]{Connectomes based on a preprocessing method for Schaefer200 parcellation, Mica-Mics dataset, edge weights log-transformed and min-max normalized. In a common color scale, a darker color denotes stronger edges.}
   \label{fig:connectomes_mica}
 \end{figure}
 
-\begin{figure}[p]
-  \begin{center}
-    %\includegraphics[width=0.9\textwidth]{images/manually_created/connectomes_brain_thesis_by_dataset.pdf}
+\begin{figure}
+\begin{center}
+    \includegraphics[width=0.9\textwidth]{images/manually_created/datasets.png}
   \end{center}
-  \caption[Connectomes based on dataset]{Connectomes based on dataset for Schaefer200 parcellation, edge weights log-transformed and min-max normalized, plotted 2000 strongest edges. Common colorscale, darker color denotes stronger edges.}
+  \caption[Connectomes based on dataset]{Connectomes based on dataset for Schaefer200 parcellation, edge weights log-transformed and min-max normalized. In a common color scale, a darker color denotes stronger edges.}
   \label{fig:connectomes_by_dataset}
 \end{figure}
 
-We were also curious if the distribution of edge weights in the brain differs based on the preprocessing method. Figure~\ref{fig:connectomes_mica} shows the positions of 3500\footnote{The constant was chosen experimentally to allow us to distinguish individual edges in the plot.} strongest edges in the brain for different preprocessing methods. It is already discussed above and shown in Figure~\ref{fig:edge_weights_glasser} that different preprocessing methods yield different numbers of stronger edges. Besides that, it does not show any large differences in the structure.
-
-However, the structure of the connectome weights differs based on the datasets. See Figure \ref{fig:connectomes_by_dataset}. For example, for PyTepFit connectome the weights of edges are significantly higher in the occipital lobe (in \uv{the back part} of the brain) than in the rest of the brain, which is much less prominent in the other datasets (even though it is still observable).
+We were also curious if the distribution of edge weights in the brain differs based on the preprocessing method. Figure~\ref{fig:connectomes_mica} shows the edge weights in the brain for different preprocessing methods. It is already discussed above and shown in Figure~\ref{fig:edge_weights_schaefer} that different preprocessing methods yield different numbers of stronger edges. Besides that, Rosen and Halgren's group averaging method creates a slightly different structure than the others. However, the structure of the connectome weights differs much more based on the datasets. See Figure \ref{fig:connectomes_by_dataset}. 
 
 \subsection{Distribution of edge lengths}
 
-We mention in Section~\ref{sec:dist-dep} that the primary reason for the introduction of the distance-dependent thresholding method was to prevent the omission of long edges in group average connectomes. However, as shown in Figure~\ref{fig:edge_lengths_glasser}, our results do not confirm that the methods fulfill this goal. It shows that the distribution is shifted towards shorter edges compared to simply averaging the lengths. The effect stays the same if we plot Euclidean distances instead of structural connectivity lengths. 
+We mention in Section~\ref{sec:dist-dep} that the primary reason for the introduction of the distance-dependent thresholding method was to prevent the omission of long edges in group average connectomes. However, as shown in Figure~\ref{fig:edge_lengths}, our results do not confirm that the method fulfills this goal. Although there are slightly more longer edges for Schaefer200 parcellation, the differences in edge length distribution are really small and probably negligible. 
 
-\begin{figure}[h!]
-  \begin{center}
-    \includegraphics[width=0.9\textwidth]{images/nootebook_generated/comparing_sc_matrices/MNI-HCP-MMP1/Probability_of_edge_lengths_in_SC_by_preprocessing_method_Mica-Mics_dataset_(matrices_min-max_normalized).pdf}
+\begin{figure}[p]
+\begin{subfigure}{\textwidth}
+      \begin{center}
+    \includegraphics[width=\textwidth]{images/nootebook_generated/sc_comparison/schaefer/5/0.25/Probability_of_edge_lengths_in_SC_by_preprocessing_method_Mica-Mics_dataset_(matrices_min-max_normalized).pdf}
   \end{center}
-  \caption[Edge lengths distribution per preprocessing method]{Edge lengths distribution per preprocessing method for Mica-Mics dataset and Glasser parcellation. The y-axis shows a probability (not count) for better comparability because the number of edges differs for the cons method.}
+  \caption{Schaefer200 parcellation}
+  \label{fig:edge_lengths_schaefer}
+\end{subfigure}
+
+\bigskip
+
+\begin{subfigure}{\textwidth}
+      \begin{center}
+    \includegraphics[width=\textwidth]{images/nootebook_generated/sc_comparison/MNI-HCP-MMP1/5/0.25/Probability_of_edge_lengths_in_SC_by_preprocessing_method_Mica-Mics_dataset_(matrices_min-max_normalized).pdf}
+  \end{center}
+  \caption{Glasser parcellation}
   \label{fig:edge_lengths_glasser}
+\end{subfigure}
+\caption[Edge lengths distribution per preprocessing method]{Edge lengths distribution per preprocessing method for Mica-Mics dataset and Schaefer200 and Glasser parcellations. The y-axis shows a probability (not count) for better comparability because the number of edges differs for the \texttt{dist} method.}
+\label{fig:edge_lengths}
 \end{figure}
 
-\section{Summarization}
+\section{Robustness of the previous results}
 
-The main takeaway of this section is, that the choice of a dataset, parcellation, and preprocessing method has an impact on the resulting connectome. 
+Section \ref{sec:sc-robustness_ftract} already discussed the robustness of F-TRACT results to structural connectome selection. In this section, let us first discuss the results for F-TRACT obtained with Deskian-Killiany parcellation. Then, we move to TMS-EEG and look at the results with a different dataset or a group-averaging method.
+
+\subsection{F-TRACT with Deskian-Killiany parcellation}
+
+As mentioned in Section \ref{sec:parcellations}, the selection of parcellation can influence the results obtained later with the data. We illustrate the issue here. 
+
+Figure  \ref{fig:ftract_alldata_long_probabilities_DK} shows that both full and partial correlations of response probability with structural connectivity and communication metrics are preserved with the change of parcellation from Glasser (360 regions) to Deskian-Killiany (68 regions), even when the results differ (for example, the highest correlation of response probability is with the structural connectivity for Deskian-Killiany, but with the shortest path efficiency for Glasser). However, Figure \ref{fig:ftract_alldata_long_amplitudes_DK} shows that for the amplitudes, there are no significant correlations when the Deskian-Killiany parcellation is used.
+
+\begin{figure}
+    \centering
+    \includegraphics[width=0.93\textwidth]{images/nootebook_generated/ftract_results/DKT/5/ED0/0.25/long/Spearman_correlation_of_SC_network_communication_metrics_with_response_probabilities_in_F-Tract.pdf}
+    \caption[F-TRACT probability correlations - all $SC$ matrices (DK)]{Correlations (absolute value) of response probability (200~ms response) and structural connectivity and derived communication metrics (DK parcellation). Asterisks denote a significant correlation ($p<0.05$).}
+    \label{fig:ftract_alldata_long_probabilities_DK}
+\end{figure}
+
+\begin{figure}
+    \centering
+    \includegraphics[width=0.93\textwidth]{images/nootebook_generated/ftract_results/DKT/5/ED0/0.25/long/Spearman_correlation_of_SC_network_communication_metrics_with_response_amplitudes_in_F-Tract.pdf}
+    \caption[F-TRACT amplitude correlations - all $SC$ matrices (DK)]{Correlations (absolute value) of response amplitude (200~ms response) and structural connectivity and derived communication metrics (DK parcellation). Asterisks denote a significant correlation ($p<0.05$)}
+    \label{fig:ftract_alldata_long_amplitudes_DK}
+\end{figure}
+
+\subsection{TMS-EEG with different datasets and group-averaging methods}
+
+We tried to calculate the results from Section \ref{sec:results_pytepfit-empirical} with different datasets and group-averaging methods for the 200 ms responses as a control.  
+
+Regarding the group-averaging method, we tried all the methods described in Section \ref{sec:group-avg}. We applied them to the Mica-Mics dataset. There are no differences in the results obtained with simple averaging, consensus thresholding, and Rosen and Halgren's method. The results obtained with distance-dependent consensus thresholding preserve the important features like high correlation of response characterized by AUC with the shortest path efficiency and the navigation efficiency (Figure \ref{fig:tms_auc_200_dist}, compare with Figure \ref{fig:tms_auc_200}), but there are differences, for example, overall lover or non-significant correlations for binarized responses (Figure \ref{fig:tms_01_200_dist}, compare with Figure \ref{fig:tms_01_200}).
+
+\begin{figure}
+    \centering
+    \includegraphics[width=\textwidth]{images/nootebook_generated/pytepfit_results/empirical/200/not_over_threshold_nan/Mica-Mics_dist/Response defined as AUC.pdf}
+    \caption[TEPs AUC (200 ms) correlations (dist)]{Spearman correlation coefficient of AUC of empirical TEP (200 ms response) with structural connectivity and communication metrics. Darker color denoted a higher absolute value of the correlation; missing values are non-significant ($p>0.05$). Group averaging method: distance-dependent consensus thresholding.}
+    \label{fig:tms_auc_200_dist}
+\end{figure}
+
+\begin{figure}
+    \centering
+    \includegraphics[width=\textwidth]{images/nootebook_generated/pytepfit_results/empirical/200/not_over_threshold_nan/Mica-Mics_dist/Response defined as 01-response.pdf}
+    \caption[Binarized TEP (200 ms) correlations (dist)]{Spearman correlation coefficient of binarized empirical TEP (200 ms response) with structural connectivity and communication metrics. Darker color denoted a higher absolute value of the correlation; missing values are non-significant ($p>0.05$). Group averaging method: distance-dependent consensus thresholding.}
+    \label{fig:tms_01_200_dist}
+\end{figure}
+
+Regarding the dataset, we tried Enigma \ref{sec:enigma}, Domhof \ref{sec:domhof}, and PyTepFit \ref{sec:pytepdata} datasets. The results slightly differ for all of them, but the key features discussed in Section \ref{sec:results_pytepfit-empirical} are always present: AUC and the first peak time correlate with communication metrics, and the highest correlations are achieved for the shortest path efficiency and navigation efficiency. See Figure \ref{fig:tms_auc_200_pytep_simple} showing results for PyTepFit dataset and response characterized by AUC as an illustrative example (compare with Figure \ref{fig:tms_auc_200}).
+
+\begin{figure}
+    \centering
+    \includegraphics[width=\textwidth]{images/nootebook_generated/pytepfit_results/empirical/200/not_over_threshold_nan/PyTepFit_simple/Response defined as AUC.pdf}
+    \caption[TEPs AUC (200 ms) correlations (PyTepFit)]{Spearman correlation coefficient of AUC of empirical TEP (200 ms response) with structural connectivity and communication metrics. Darker color denoted a higher absolute value of the correlation; missing values are non-significant ($p>0.05$). Group averaging method: simple averaging, dataset: PyTepFit.}
+    \label{fig:tms_auc_200_pytep_simple}
+\end{figure}
+
+
+\section{Conclusion}
+
+The main takeaway of this section is, that the choice of a dataset, parcellation, and preprocessing method has an impact on the resulting connectome. Consequently, the connectome has an impact on the results of subsequent analysis.
 
 First of all, the different data sources might differ in the measurement settings, DW-MRI preprocessing, and many other aspects along the way from the human brain to the connectivity matrix. With Figure \ref{fig:sc_correlations} and Figure \ref{fig:connectomes_by_dataset} in mind, we recommend using structural connectivity matrices from different sources whenever possible because they could differ quite a lot.
 
-The choice of parcellation is an important step as well. We aim to use graph theoretical metrics to get better insight into the brain function, and the number of nodes (not mentioning other differences of the parcellations) could have a great impact on the subsequent analysis (see Chapter \ref{ch:ftract}).
+The choice of parcellation is an important step as well. We aim to use graph theoretical metrics to get better insight into the brain function, and the number of nodes (not mentioning other differences of the parcellations) could have a great impact on the subsequent analysis.
 
-The choice of a specific preprocessing method seems less influential, but it might differ for less dense matrices of individual subjects, e.g. for finer parcellations (Figure \ref{fig:edge_weights_glasser}). We use matrices created using various preprocessing methods in Chapter \ref{ch:ftract} to see if there are differences, even if this section suggests they might be interchangeable.
+Even though there are differences in the connectomes and consequently in the results, we confirmed that the observations from Chapters \ref{ch:ftract} and \ref{ch:pytepfit} are robust regarding the connectome selection.

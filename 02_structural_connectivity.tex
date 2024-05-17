@@ -1,6 +1,6 @@
 \chapter{Brain structural connectivity}
 
-The transfer of information and functional integration between different parts of the brain is influenced by white matter connections. The relationship between brain structure and function is still under active research, and the degree to which function is dependent on the structure is not entirely clear. However, there is no doubt that the relationship exists. \cite{sotiropoulos_building_2019} In this work, we focus on the prediction of brain function, specifically its reaction to a stimulus, using the structure. 
+The transfer of information and functional integration between different parts of the brain is influenced by white matter connections. The relationship between brain structure and function is still under active research, and the degree to which function is dependent on the structure is not entirely clear. However, there is no doubt that the relationship exists. \TODO[nějakou citaci] In this work, we focus on the relationship between brain function, specifically its reaction to a stimulus, to the structure. 
 
 Mapping billions of individual neurons in the human brain is intractable. Because of that, we attempt to use a simplified description of the structure while keeping its important properties. Structural connectome describes the structure of white matter fiber pathways as a graph. Vertices represent parts of the brain, and edges represent their anatomical connections. The connectome is usually represented as a connectivity (adjacency) matrix. \cite{yeh_mapping_2021}
 
@@ -50,7 +50,7 @@ Another problem was caused by the fact that the brain parcellation could use var
 
 It is useful for the subsequent network analysis to keep the information about the spatial distances of the nodes. Because of that, we need to assign 3D coordinates to each node. The coordinates are obtained as a center of mass of the voxels registered as a part of the region of interest. They could be calculated for the atlas \enquote{model brain} or separately for each patient sample. For simplicity, we consider only the first option because we are working with average data, and the small differences are not of interest to us.
 
-\subsection{Edges estimation}
+\subsection{Edges estimation}\label{sec:edge_estimation}
 
 Conceptually, we want to create a map of long-range white matter fibers connecting the gray matter regions of interest discussed above. 
 
