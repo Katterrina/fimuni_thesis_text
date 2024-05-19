@@ -28,7 +28,7 @@ We used \texttt{struct\_consensus} method from netneurotools package\footnote{\u
 
 \subsection{Averaging by Rosen and Halgren}\label{sec:rh}
 
-We include the description of this specific method because it was used in one of the matrices we used in our experiments (see Section \TODO). We decided to follow the averaging methodology described by Rosen and Halgren in the paper \textit{A Whole-Cortex Probabilistic Diffusion Tractography Connectome} \cite{rosen_whole-cortex_2021} to get a matrix comparable with the one published by Rosen and Halgren with a different group of subjects.
+This method was used by Rosen and Halgren in the paper \textit{A Whole-Cortex Probabilistic Diffusion Tractography Connectome} \cite{rosen_whole-cortex_2021} in a group-averaging of the matrix described in Section \ref{sec:rhdata}.
 
 The principle is the same as a simple average, but it works with a ratio of streamlines between two parcels to a global number of streamlines instead of plain streamline counts. According to the paper, the values are first averaged across the subjects and then scaled such as the number of streamlines originating at parcel A and terminating at parcel B is divided by the total number of streamlines that either originate at parcel A or terminate at parcel B, excluding within-parcel connections. \cite{rosen_whole-cortex_2021} We used the equation below, where $SC$ is the final structural connectivity matrix and $m$ is an average of structural matrices across individual subjects.
 
@@ -36,7 +36,7 @@ $$
 SC_{ij} = \frac{m_{ij}}{\sum_k m_{ik} + \sum_l m_{lj} - (m_{ii} - m_{jj})}
 $$
 
-The resulting matrix was sometimes non-symmetric even if the individual subject matrices were symmetric. It was caused by numerical instability in Python while working with small numbers. To overcome this problem, we added $SC = (SC + SC^T) /2$ to the end of the procedure.
+In practice, he resulting matrix was sometimes non-symmetric even if the individual subject matrices were symmetric. It was caused by numerical instability in Python while working with small numbers. To overcome this problem, we added $SC = (SC + SC^T) /2$ to the end of the procedure.
 
 \section{Structural connectome density}
 
@@ -56,9 +56,9 @@ There is a disadvantage of Enigma structural matrices, they provide only edge we
 
 \subsection{Domhof}\label{sec:domhof}
 
-This dataset, created by Domhof et al. \cite{domhof_parcellation-based_2022}, is available online on EBRAINS platform.\footnote{\url{https://doi.org/10.25493/NVS8-XS5}} The repository provides individual connectomes for 200 subjects from the Human Connectome Project (HCP). For each subject, there is a matrix with streamline counts and a matrix with streamline lengths. They provide the connectomes in 20 different parcellations, including DK and Schaefer200 parcellations. 
+This dataset, created by Domhof et al. \cite{domhof_parcellation-based_2022}, is available online on the EBRAINS platform.\footnote{\url{https://doi.org/10.25493/NVS8-XS5}} The repository provides individual connectomes for 200 subjects from the Human Connectome Project (HCP). For each subject, there is a matrix with streamline counts and a matrix with streamline lengths. They provide the connectomes in 20 different parcellations, including DK and Schaefer200 parcellations. 
 
-During the data investigation, we found that there are 70 ROIs in the matrices in the DK parcellation. We removed the surplus ROIs to achieve compatibility with Enigma.
+During the data exploration, we found that there are 70 ROIs in the matrices in the DK parcellation. We removed the surplus ROIs to achieve compatibility with Enigma.
 
 We constructed the group-representative matrices using three approaches described in Section~\ref{sec:group-avg}, namely simple average, distance-dependent consensus thresholding, and the Rosen and Halgren method. For streamline lengths group average, we calculated an average considering only the values for which the corresponding weight was non-zero.
 

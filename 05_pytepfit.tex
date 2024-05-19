@@ -1,12 +1,14 @@
 \chapter{Generalize F-TRACT approach to TMS-EEG}\label{ch:pytepfit}
 
+The main goal of this thesis is to apply the approach by Seguin et al. \cite{seguin_communication_2023} rooted in complex network analysis and compare its applicability in empirical and simulated EEG recordings of TMS evoked potentials. As explained in Section \ref{sec:tms-eeg_measurement}, the TMS-EEG measurement is indirect; it does not require the implantation of electrodes in the brain. Because of that, it is easier to use it in research, but it is less precise. We want to see if it is possible to get an insight into the response structure using the communication models for TMS-EEG data similarly as it was presented in Sections \ref{sec:ftract_results} and \ref{sec:ftract_results_per_roi} for iEEG data. 
+
 \section{TMS-EEG data}\label{sec:reponse_definition}
 
 There are several key differences between the summarized iEEG functional data available in F-TRACT and the TMS-EEG data used in this section. 
 
-The F-TRACT dataset provides probabilities. For each ROI, there is a vector of probabilities that there are significant responses in the other ROIs aggregated on a group level. On the other hand, the TMS-EEG data used here are time series of a single subject capturing the time-resolved response in time for each ROI after the target site stimulation. The TMS-EEG data in the dataset used in this thesis were also measured with stimulation on a single site, while F-TRACT includes stimulations in many different sites.
+The F-TRACT dataset provides probabilities. For each ROI, there is a vector of probabilities that there are significant responses in the other ROIs aggregated on a group level. On the other hand, the TMS-EEG data used here are time series of a single subject capturing the time-resolved response for each ROI after the target site stimulation. another difference is that the TMS-EEG data in the dataset used in this thesis were measured with stimulation on a single site, while F-TRACT includes stimulations in many different sites.
 
-Besides empirical data, we work with simulated TMS-EEG data and we compare the results. This comparison may be useful as guidance for the future development of models for a generation of artificial TMS-evoked responses.
+Besides empirical data, we work with simulated TMS-EEG data, and we compare the results. This comparison may be useful as guidance for the future development of models for a generation of artificial TMS-evoked responses.
 
 \subsection{Empirical data}
 
@@ -34,9 +36,9 @@ The resulting simulated data are plotted in Figure \ref{fig:tms-simulated-data}.
     \label{fig:tms-simulated-data}
 \end{figure}
 
-\subsection{Definitions of the quantification of TMS-EEG response}
+\subsection{Quantification of TMS-EEG response}
 
-To follow the methodology used by Seugin et al. for the F-TRACT data, it is necessary to decide how to quantify the time series of each ROI and, followingly, a vector characterizing the response in the whole brain. We can not use the probability of the response because the TEPs were measured only in 20 subjects and we have the group-averaged data.
+To follow the methodology used by Seugin et al. for the F-TRACT data, it is necessary to decide how to quantify the time series of each ROI and, followingly, create a vector characterizing the response in the whole brain. We can not use the probability of the response because the TEPs were measured only in 20 subjects and we have the group-averaged data.
 
 This section discusses all the options used later in the work.\footnote{We considered also variance, mean, difference of lowes and highest value, AUC of the area above the threshold, etc., but we did not include them because they are very similar to the ones in the list.} They are also visualized in Figure \ref{fig:tms-respondse-definition}.
 
@@ -68,11 +70,11 @@ In this section, we present the results showing that, for some of the response d
 
 For the structural connectivity, we used the Mica-Mics dataset with Rosen and Halgrens's preprocessing method because it gave us the best results for the F-TRACT dataset (Section \ref{sec:sc-robustness_ftract}) and it also provides the Schaefer200 parcellation used here, which allows better comparison of the results. We used the Spearman correlation coefficient, results are considered significant for $p<0.05$.
 
-\subsection{Results by response definition -- binary}
+\subsection{Binarized response}
 
-First of all, if the response is defined as binary, it correlates with Euclidean distance across response lengths 50, 100, 150, 200, and 300 milliseconds and various thresholds ($r \approx 0.4$ depending on the parameters). It serves as a sanity check that the calculations are correct because Sections \ref{sec:ftract_results} and \ref{sec:ftract_results_per_roi} show that there is a high correlation between the response probability and amplitude and Euclidean distance. 
+First, if the response is binarized, it correlates with Euclidean distance across response lengths 50, 100, 150, 200, and 300 milliseconds and various thresholds ($r \approx 0.4$ depending on the parameters). It serves as an assurance that the calculations are correct because Sections \ref{sec:ftract_results} and \ref{sec:ftract_results_per_roi} show that there is a high correlation between the response probability and amplitude and Euclidean distance. 
 
-We show the results for 200 ms response across various thresholds in Figure \ref{fig:tms_01_200}. The shortest path efficiency and the navigation efficiency correlations are similar to the ones achieved with Euclidean distance, which is similar to the results with F-TRACT in Figure \ref{fig:ftract_alldata_long_probabilities}.
+We show the results for 200 ms response across various thresholds in Figure \ref{fig:tms_01_200}. The shortest path efficiency and navigation efficiency correlations are similar to those achieved with Euclidean distance, similar to the F-TRACT results in Figure \ref{fig:ftract_alldata_long_probabilities}.
 
 \begin{figure}
     \centering
@@ -81,7 +83,7 @@ We show the results for 200 ms response across various thresholds in Figure \ref
     \label{fig:tms_01_200}
 \end{figure}
 
-\subsection{Results by response definition -- AUC}
+\subsection{Response characterized by AUC}
 
 Based on our results, the AUC of TEP above a threshold correlates best with the structural connectivity and communication metrics.
 
@@ -103,9 +105,9 @@ Nevertheless, the response AUC correlation is consistently highest with Euclidea
     \label{fig:tms_auc_200}
 \end{figure}
 
-\subsection{Results by response definition -- first peak time}
+\subsection{Response characterized by peak times}
 
-If we define the response strength as the amount of time from the stimulation to the first peak, we need to consider an interval long enough so the peaks can occur. Looking at Figure \ref{fig:tms-empirical-data}, it could be seen that 50 ms is insufficient. Based on our experiments, we should take at least 150 ms response. 
+If we characterize the response by the amount of time from the stimulation to the first peak, we need to consider an interval long enough so the peaks can occur. Looking at Figure \ref{fig:tms-empirical-data}, it could be seen that 50 ms is insufficient. Based on our experiments, we should take at least 150 ms response. 
 
 Taking into account only responses longer than 150 ms, the first peak time correlates with Euclidean distance, shortest path efficiency, navigation efficiency, and communicability across all the thresholds. See Figure \ref{fig:tms_first_time_200} for 200 ms response.
 
@@ -116,11 +118,9 @@ Taking into account only responses longer than 150 ms, the first peak time corre
     \label{fig:tms_first_time_200}
 \end{figure}
 
-\subsection{Results by response definition -- highest peak time}
+Characterizing the response by the highest peak time proved to be a dead end, as the results are largely non-significant. There is an exception for a response length of 150 ms, which shows many significant correlations. It is probably because the highest peaks correspond to the first peaks for this response length; the plot for this setting looks very similar to the first peak time responses shown in Figure \ref{fig:tms_first_200}. 
 
-Defining the response as the highest peak time proved to be a dead end, as the results are largely non-significant. There is an exception for a response length of 150 ms, which shows many significant correlations. It is probably because the highest peaks correspond to the first peaks for this response length; the plot for this setting looks very similar to the first peak time responses shown in Figure \ref{fig:tms_first_200}. 
-
-\subsection{Results by response definition -- peak heights}
+\subsection{Response characterized by peak heights}
 
 Surprisingly, there are only a few significant correlations, only for lower thresholds, across all the response lengths when we use the highest peak as a response characterization. It seems that the relationship between the highest peak height and structural connectivity is weak, if any. It stands in contrast with the results obtained for response amplitudes from F-TRACT in Figure \ref{fig:ftract_alldata_long_amplitudes}, where we see significant correlations of the amplitudes with structural connectivity and communication metrics. See Figure \ref{fig:tms_heighest_200} for 200 ms response.
 
