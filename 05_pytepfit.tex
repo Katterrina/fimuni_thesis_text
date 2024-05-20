@@ -45,7 +45,7 @@ This section discusses all the options used later in the work. They are also vis
 \begin{itemize}
     \item \textbf{binary (01) response} If the TEP exceeds a predefined threshold, the value is set to 1, otherwise it is set to 0.
     \item \textbf{first/highest peak} The weight of the response is defined as the height of the first/highest peak above a predefined threshold. If the TEP does not exceed the threshold, it is set to \texttt{nan} and is not considered in the analysis.\footnote{Alternatively, we can replace all \texttt{nan}s in the definitions with zeros and include them in the analysis. The approaches capture different properties of the response.} The highest peak corresponds to amplitude in F-TRACT. 
-    \item \textbf{first/highest peak time} The weight of the response is defined as the time when the first/highest peak above a predefined threshold occurs. If the TEP does not exceed the threshold, it is set to \texttt{nan} and is not considered in the analysis. The idea behind this definition is that we assume the response to propagate faster to regions that are \uv{more} connected (for example, there are edges with higher weights or shorter lengths in structural connectome).
+    \item \textbf{first/highest peak latency} The weight of the response is defined as the latency of the the first/highest peak above a predefined threshold occurs. If the TEP does not exceed the threshold, it is set to \texttt{nan} and is not considered in the analysis. The idea behind this definition is that we assume the response to propagate faster to regions that are \uv{more} connected (for example, there are edges with higher weights or shorter lengths in structural connectome).
     \item \textbf{AUC} The weight of the response is defined as the area under the curve if the curve exceeds a predefined threshold, \texttt{nan} otherwise. The key idea of this definition is that AUC captures the overall \uv{power} of the response. It is systematically different from the other definitions, so it might reveal different relationships.
 \end{itemize}
 
@@ -107,20 +107,20 @@ Nevertheless, the response AUC correlation is consistently highest with Euclidea
     \label{fig:tms_auc_200}
 \end{figure}
 
-\subsection{Response characterized by peak times}
+\subsection{Response characterized by peak latencies}
 
 If we characterize the response by the amount of time from the stimulation to the first peak, we need to consider an interval long enough so the peaks can occur. Looking at Figure \ref{fig:tms-empirical-data}, it could be seen that 50 ms is insufficient. Based on our experiments, we should take at least 150 ms response. 
 
-Taking into account only responses longer than 150 ms, the first peak time correlates with Euclidean distance, shortest path efficiency, navigation efficiency, and communicability across all the thresholds. See Figure \ref{fig:tms_first_time_200} for 200 ms response.
+Taking into account only responses longer than 150 ms, the first peak latency correlates with Euclidean distance, shortest path efficiency, navigation efficiency, and communicability across all the thresholds. See Figure \ref{fig:tms_first_time_200} for 200 ms response.
 
 \begin{figure}
     \centering
     \includegraphics[width=\textwidth]{images/nootebook_generated/pytepfit_results/empirical/200/not_over_threshold_nan/Response defined as first_peak_time.pdf}
-    \caption[TEPs first peak time (200 ms) correlations]{Spearman correlation coefficient of the first peak time in empirical TEP (200 ms response) with structural connectivity and communication metrics. Darker color denoted a higher absolute value of the correlation; missing values are non-significant ($p>0.05$).}
+    \caption[TEPs first peak latency (200 ms) correlations]{Spearman correlation coefficient of the first peak latency in empirical TEP (200 ms response) with structural connectivity and communication metrics. Darker color denoted a higher absolute value of the correlation; missing values are non-significant ($p>0.05$).}
     \label{fig:tms_first_time_200}
 \end{figure}
 
-Characterizing the response by the highest peak time proved to be a dead end, as the results are largely non-significant. There is an exception for a response length of 150 ms, which shows many significant correlations. It is probably because the highest peaks correspond to the first peaks for this response length; the plot for this setting looks very similar to the first peak time responses shown in Figure \ref{fig:tms_first_200}. 
+Characterizing the response by the highest peak latency proved to be a dead end, as the results are largely non-significant. There is an exception for a response length of 150 ms, which shows many significant correlations. It is probably because the highest peaks correspond to the first peaks for this response length; the plot for this setting looks very similar to the first peak latency responses shown in Figure \ref{fig:tms_first_200}. 
 
 \subsection{Response characterized by peak heights}
 
@@ -137,7 +137,7 @@ The height of the first peak does not exhibit any correlations with structural c
 
 \subsection{Response length}
 
-The results change with response length. As mentioned above, if the response is characterized by the first peak time, the length should be at least around 150 ms. If the response is shorter, not all peaks occur in the time. 
+The results change with response length. As mentioned above, if the response is characterized by the first peak latency, the length should be at least around 150 ms. If the response is shorter, not all peaks occur in the time. 
 
 If we characterize the response using AUC, the results for a really short response length (50 ms) are different from the other response lengths ($\geq100$ ms), as shown in Figure \ref{fig:tms_auc_50} and Figure \ref{fig:tms_auc_200}.
 
@@ -158,23 +158,23 @@ The first important similarity lies in the results for the binarized response. I
     \label{fig:tms_binary_100_simulated}
 \end{figure}
 
-Another similarity can be found in the response characterized by the first peak time. Even though the correlations are overall higher for simulated data, Figure \ref{fig:tms_first_time_200_simulated} shows a similar pattern to Figure \ref{fig:tms_first_time_200} with the highest correlations of the first peak times with Euclidean distance, shortest path efficiency and navigation efficiency across all thresholds. 
+Another similarity can be found in the response characterized by the first peak latency. Even though the correlations are overall higher for simulated data, Figure \ref{fig:tms_first_time_200_simulated} shows a similar pattern to Figure \ref{fig:tms_first_time_200} with the highest correlations of the first peak latency with Euclidean distance, shortest path efficiency and navigation efficiency across all thresholds. 
 
 \begin{figure}
     \centering
     \includegraphics[height=\textwidth]{images/nootebook_generated/pytepfit_results/simulated/200/not_over_threshold_nan/Response defined as first_peak_time.pdf}
-    \caption[TEPs first peak time (200 ms) correlations (simulated data)]{Spearman correlation coefficient of the first peak time in simulated TEP (200 ms response) with structural connectivity and communication metrics. Darker color denoted a higher absolute value of the correlation; missing values are non-significant ($p>0.05$).}
+    \caption[TEPs first peak latency (200 ms) correlations (simulated data)]{Spearman correlation coefficient of the first peak latency in simulated TEP (200 ms response) with structural connectivity and communication metrics. Darker color denoted a higher absolute value of the correlation; missing values are non-significant ($p>0.05$).}
     \label{fig:tms_first_time_200_simulated}
 \end{figure}
 
 \subsection{Differences}
 
-Unsurprisingly, there are many differences in the results calculated using simulated and empirical data. First of all, considering a response length of at least 100 ms, the highest correlations of the response with communication metrics are obtained for response strength defined as its highest peak time (Figure \ref{fig:tms_highest_time_200_simulated} for 200 ms response).
+Unsurprisingly, there are many differences in the results calculated using simulated and empirical data. First of all, considering a response length of at least 100 ms, the highest correlations of the response with communication metrics are obtained for response strength defined as its highest peak latency (Figure \ref{fig:tms_highest_time_200_simulated} for 200 ms response).
 
 \begin{figure}
     \centering
     \includegraphics[height=\textwidth]{images/nootebook_generated/pytepfit_results/simulated/200/not_over_threshold_nan/Response defined as highest_peak_time.pdf}
-    \caption[TEPs highest peak time (200 ms) correlations (simulated data)]{Spearman correlation coefficient of the highest peak time in simulated TEP (200 ms response) with structural connectivity and communication metrics. Darker color denoted a higher absolute value of the correlation; missing values are non-significant ($p>0.05$).}
+    \caption[TEPs highest peak latency (200 ms) correlations (simulated data)]{Spearman correlation coefficient of the highest peak latency in simulated TEP (200 ms response) with structural connectivity and communication metrics. Darker color denoted a higher absolute value of the correlation; missing values are non-significant ($p>0.05$).}
     \label{fig:tms_highest_time_200_simulated}
 \end{figure}
 
