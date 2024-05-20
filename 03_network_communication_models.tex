@@ -75,7 +75,8 @@ where $\{p(i,j)\}$ is a set of all shortest paths connecting $i$ and $j$. Using 
 $$
 SI_{ij}=-\log_2 P_{ij}.
 $$
-This could be explained as \uv{the total information value of knowing any of the shortest paths between $i$ and $j$}. For the weighted case, we can just replace the probability $\frac{1}{k_i-1}$ of taking a specific exit from node $i$ by $\frac{w_e}{w_i-w_{in}}$ where $w_e$ is the weight of the specific edge, $w_i$ is the sum of weights of all edges adjacent to $i$ and $w_{in}$ is the weight of the edge taken when arriving to the node. 
+
+This could be explained as \uv{the total information value of knowing any of the shortest paths between $i$ and $j$}. For the weighted case, we can just replace the probability $1/(k_i-1)$ of taking a specific exit from node $i$ by $w_e/(w_i-w_{in})$ where $w_e$ is the weight of the specific edge, $w_i$ is the sum of weights of all edges adjacent to $i$ and $w_{in}$ is the weight of the edge taken when arriving to the node. 
 
 \section{Routing protocols}
 
@@ -87,11 +88,17 @@ However, knowledge about network topology is highly unlikely in real neural syst
 
 According to Seguin et al. \cite{seguin_brain_2023}, the shortest path routing model is the most common and widely used in network neuroscience. The key assumption of this model is that the signals in the brain follow the shortest paths because it is the most efficient option.
 
-The calculation of shortest path efficiency is pretty straightforward. First, the shortest paths are calculated between all node pairs $\Lambda^*_{ij}$. The shortest path efficiency $SPE$ is then defined as $SPE_{ij}=\frac{1}{\Lambda^*_{ij}}$.
+The calculation of shortest path efficiency is pretty straightforward. First, the shortest paths are calculated between all node pairs $\Lambda^*_{ij}$. The shortest path efficiency $SPE$ is then defined as 
+$$
+SPE_{ij}=\frac{1}{\Lambda^*_{ij}}.
+$$
 
 \subsection{Navigation efficiency (NAV)}
 
-Navigation routing protocol uses a greedy strategy to transmit the signal \uv{in the right direction} based on the spatial distribution of the nodes. Let us assume the signal travels from node $i$ to $j$. For each node along the way starting from $i$, we identify its neighbor with the smallest Euclidean distance to $j$, and progress to it. The process is repeated until $j$ is reached and we sum the lengths of edges along the path, denoting the sum $\Lambda_{ij}$. Then, same as for the shortest path efficiency, navigation efficiency is defined as $NAV_{ij}=1/\Lambda_{ij}$.
+Navigation routing protocol uses a greedy strategy to transmit the signal \uv{in the right direction} based on the spatial distribution of the nodes. Let us assume the signal travels from node $i$ to $j$. For each node along the way starting from $i$, we identify its neighbor with the smallest Euclidean distance to $j$, and progress to it. The process is repeated until $j$ is reached and we sum the lengths of edges along the path, denoting the sum $\Lambda_{ij}$. Then, same as for the shortest path efficiency, navigation efficiency is defined as 
+$$
+NAV_{ij}=\frac{1}{\Lambda_{ij}}.
+$$
 
 Note that this protocol uses structural connectivity only to get the connectedness of the graph and the navigation is based on Euclidean distance. The length of edges of the structural connectome is only used at the end to get the real length of the path.
 
