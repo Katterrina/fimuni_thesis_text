@@ -1,4 +1,4 @@
-\chapter{TMS-EEG and F-TRACT comparison}\label{ch:compare}
+\chapter{TMS-EEG and F-Tract comparison}\label{ch:compare}
 
 This chapter is devoted to the following questions: If we use TMS-EEG instead of iEEG (used in F-Tract), does the response still correlate with structural connectivity and communication metrics?  What are the similarities and what are the discrepancies? 
 
@@ -8,9 +8,9 @@ Figure \ref{fig:compare-correlations_F-Tract-TMS} shows together the correlation
 
 TMS-EEG correlations are lower than correlations for F-Tract, no matter how we characterize the response. That was expected because the TMS stimulation has to get through the skull and other tissues before it enters the target region, and also the EEG measurement is performed through the head and source-reconstructed afterward, which all adds noise to the data.
 
-Looking at the communication metrics, both TMS-EEG and F-TRACT correlate best with the shortest path efficiency. An interesting observation is that if the response is characterized by first peak height, it correlates better with shortest path efficiency calculated using structural connectivity weights than lengths.
+Looking at the communication metrics, both TMS-EEG and F-Tract correlate best with the shortest path efficiency. An interesting observation is that if the response is characterized by first peak height, it correlates better with shortest path efficiency calculated using structural connectivity weights than lengths.
 
-Another interesting question is how much can be explained by the Euclidean distance of the regions. As discussed in Chapter \ref{ch:ftract}, there are significant partial correlations for F-TRACT probabilities and amplitudes even when Euclidean distance is controlled. We can also see in Figure \ref{fig:compare-correlations_F-Tract-TMS} that some of the communication metrics achieve higher correlations with response probability than the Euclidean distance for F-Tract. None of this is true for the TMS-EEG data. There are no significant partial correlations and the correlations of responses with communication metrics are lower than with Euclidean distance.\footnote{It is like that also for the other TMS-EEG thresholds and response lengths discussed in Chapter \ref{ch:pytepfit}.} 
+Another interesting question is how much can be explained by the Euclidean distance of the regions. As discussed in Chapter \ref{ch:ftract}, there are significant partial correlations for F-Tract probabilities and amplitudes even when Euclidean distance is controlled. We can also see in Figure \ref{fig:compare-correlations_F-Tract-TMS} that some of the communication metrics achieve higher correlations with response probability than the Euclidean distance for F-Tract. None of this is true for the TMS-EEG data. There are no significant partial correlations and the correlations of responses with communication metrics are lower than with Euclidean distance.\footnote{It is like that also for the other TMS-EEG thresholds and response lengths discussed in Chapter \ref{ch:pytepfit}.} 
 
 This means that even though we might get some insight by studying the TMS-EEG from the perspective of communication metrics, we should keep in mind that various aspects of the response (AUC, the first peak height) are largely driven by the Euclidean distance. 
 
@@ -24,7 +24,7 @@ This means that even though we might get some insight by studying the TMS-EEG fr
 
 \section{Parcellations mapping}\label{sec:dice}
 
-Direct comparison of the TMS-EEG and F-TRACT results is not possible, because they do not share the same brain parcellation. The TMS-EEG dataset is published in Schaefer200 parcellation, which is not available for F-TRACT. Because of that, it is necessary to find a mapping between Glasser and Schaefer200 parcellation.
+Direct comparison of the TMS-EEG and F-Tract results is not possible, because they do not share the same brain parcellation. The TMS-EEG dataset is published in Schaefer200 parcellation, which is not available for F-Tract. Because of that, it is necessary to find a mapping between Glasser and Schaefer200 parcellation.
 
 Lawrence et al. published a paper \textit{Standardizing human brain parcellations} \cite{lawrence_standardizing_2021} discussing the issue of mapping between distinct brain parcellations. They propose the Dice coefficient \cite{dice_measures_1945} as a possibility of similarity evaluation between ROIs across parcellations. 
 
@@ -46,19 +46,19 @@ However, the source-reconstruction of the TMS-EEG data by Momi et al. \cite{momi
 
 Because we use the TMS-EEG data in Schaefer200 parcellation, we decided to use \texttt{3b\_L} as a corresponding stimulation site in Glasser for the analysis, even though it is not the primary motor cortex. We chose \texttt{3b\_L} instead of \texttt{1\_L} because they are close to each other, both have an overlap with \texttt{7Networks\_LH\_SomMot\_9} and there are much more data in F-Tract for \texttt{3b\_L} stimulation than for \texttt{1\_L} stimulation, which is better for the analysis. 
 
-\subsection{Comparison of F-TRACT and TMS-EEG responses}
+\subsection{Comparison of F-Tract and TMS-EEG responses}
 
-Section \ref{sec:compare-correlations_F-Tract-TMS} discusses that there are similarities in correlations between the stimulus responses in F-TRACT and TMS-EEG and communication metrics. Now, let us see the relationship between responses in F-TRACT and TMS-EEG. Are the responses structurally similar? If the same site is stimulated, does the strength of activation in TMS-EEG correspond to the response probability in F-TRACT?
+Section \ref{sec:compare-correlations_F-Tract-TMS} discusses that there are similarities in correlations between the stimulus responses in F-Tract and TMS-EEG and communication metrics. Now, let us see the relationship between responses in F-Tract and TMS-EEG. Are the responses structurally similar? If the same site is stimulated, does the strength of activation in TMS-EEG correspond to the response probability in F-Tract?
 
 There is a significant correlation between AUC in TMS-EEG and response probability (Spearman correlation coefficient is $r=0.60$). If we look at the first peak height instead of AUC, there is again a significant correlation with the probability (Spearman correlation coefficient $r=-0.56$). The correlation is negative -- the responses with higher probabilities occur faster. 
 
-Figure \ref{fig:response_tmsAUC-ftract_scatter} shows the response probability in F-TRACT vs AUC in TMS-EEG. We see that there are regions in the somatomotor area that have a high probability of activation but the value of AUC is not exceptionally high and, on the contrary, regions in the salience/ventral attention area that do not have that high probability of activation according to F-Tract, but very high AUC. Figure \ref{fig:response_tmsFP-ftract_scatter} shows the comparison for the first peak latency instead of AUC. 
+Figure \ref{fig:response_tmsAUC-ftract_scatter} shows the response probability in F-Tract vs AUC in TMS-EEG. We see that there are regions in the somatomotor area that have a high probability of activation but the value of AUC is not exceptionally high and, on the contrary, regions in the salience/ventral attention area that do not have that high probability of activation according to F-Tract, but very high AUC. Figure \ref{fig:response_tmsFP-ftract_scatter} shows the comparison for the first peak latency instead of AUC. 
 
 \begin{figure}
   \begin{center}
     \includegraphics[width=\textwidth]{images/nootebook_generated/tmseeg_ftract_responses_comparison/AUC/Response_probability_vs_AUC_in_TMS-EEG_in_Schaefer200_mapped_to_Glasser_parcellation.png}
   \end{center}
-  \caption[F-TRACT probabilities vs TMS-EEG AUC]{F-TRACT probabilities vs TMS-EEG AUC for 200 ms response length and threshold 8 in TMS-EEG. ROIs labeled based on Glasser parcellation and colored based on Yeo7 network extracted from Schaefer200 parcellation, plotted if the response value not \texttt{nan} in both F-TRACT and AUC. Each Glasser ROI was assigned to Schaefer200 ROI based on the highest Dice score.}
+  \caption[F-Tract probabilities vs TMS-EEG AUC]{F-Tract probabilities vs TMS-EEG AUC for 200 ms response length and threshold 8 in TMS-EEG. ROIs labeled based on Glasser parcellation and colored based on Yeo7 network extracted from Schaefer200 parcellation, plotted if the response value not \texttt{nan} in both F-Tract and AUC. Each Glasser ROI was assigned to Schaefer200 ROI based on the highest Dice score.}
   \label{fig:response_tmsAUC-ftract_scatter}
 \end{figure}
 
@@ -66,6 +66,6 @@ Figure \ref{fig:response_tmsAUC-ftract_scatter} shows the response probability i
   \begin{center}
     \includegraphics[width=\textwidth]{images/nootebook_generated/tmseeg_ftract_responses_comparison/FP/Response_probability_vs_first_peak_latency_in_TMS-EEG_in_Schaefer200_mapped_to_Glasser_parcellation.png}
   \end{center}
-  \caption[F-TRACT probabilities vs TMS-EEG first peak latency]{F-TRACT probabilities vs TMS-EEG first peak latency for 200 ms response length and threshold 8 in TMS-EEG. ROIs labeled based on Glasser parcellation and colored based on Yeo7 network extracted from Schaefer200 parcellation, plotted if the response value not \texttt{nan} in both F-TRACT and AUC. Each Glasser ROI was assigned to Schaefer200 ROI based on the highest Dice score.}
+  \caption[F-Tract probabilities vs TMS-EEG first peak latency]{F-Tract probabilities vs TMS-EEG first peak latency for 200 ms response length and threshold 8 in TMS-EEG. ROIs labeled based on Glasser parcellation and colored based on Yeo7 network extracted from Schaefer200 parcellation, plotted if the response value not \texttt{nan} in both F-Tract and AUC. Each Glasser ROI was assigned to Schaefer200 ROI based on the highest Dice score.}
   \label{response_tmsFP-ftract_scatter}
 \end{figure}
