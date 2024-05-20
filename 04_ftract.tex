@@ -14,8 +14,6 @@ The evoked potentials recorded using iEEG were baseline corrected\footnote{Basel
 
 It is important to mention that the dataset available on EBRAINS publishes the response probability and amplitude matrices in two versions, one considering responses up to 50 ms after the stimulus and the other up to 200 ms after the stimulus. However, Seguin et al. used the responses up to 800 ms after the stimulation.\footnote{They used the 200 ms version in robustness analysis, it can be found in the Supplementary information of the paper. \cite{seguin_communication_2023} } That might be a source of discrepancy in the results.
 
-Seguin et al. also excluded close ROI pairs from the analysis (Euclidean distance $<20$~mm). They provide results without this step in the paper's appendix; it does not affect the overall results. 
-
 \section{Results}\label{sec:ftract_results}
 
 In this section, we present the results of our replication of the work by Seguin et al. \cite{seguin_communication_2023}. There is a key difference between our results and the original paper in that we used not only structural connectivity weights derived from streamline counts between individual ROI, but also streamline lengths. We show that the lengths correlate very well with the response probability.
@@ -49,7 +47,7 @@ All the correlations were calculated for all ROI pairs (i. e. the whole matrix) 
 
 \subsection{Robustenss in structural connectome selection}\label{sec:sc-robustness_ftract}
 
-First of all, the correlations are robust to structural connectome selection. Figure \ref{fig:ftract_alldata_long_probabilities} shows the correlations of response probabilities with structural matrices and communication metrics. Figure \ref{fig:ftract_alldata_long_amplitudes} shows the same for response amplitudes. We can see that there are differences in results based on the dataset and group-averaging method selection, but there are significant correlations for all of them and differences are generally rather small for most of the communication metrics.\footnote{Change of response length (50 ms, 200 ms) or excluding close pairs or regions do not reveal any new information.} Because of that, we present the rest of the results with only the Mica-Mics dataset and Rosen and Halgren's group averaging method for simplicity. \TODO[kde se dá kouknout na další výsledky]
+First of all, the correlations are robust to structural connectome selection. Figure \ref{fig:ftract_alldata_long_probabilities} shows the correlations of response probabilities with structural matrices and communication metrics. Figure \ref{fig:ftract_alldata_long_amplitudes} shows the same for response amplitudes. We can see that there are differences in results based on the dataset and group-averaging method selection, but there are significant correlations for all of them and differences are generally rather small for most of the communication metrics.\footnote{Change of response length (50 ms, 200 ms) or excluding close pairs or regions do not reveal any new information.} Because of that, we present the rest of the results with only the Mica-Mics dataset and Rosen and Halgren's group averaging method for simplicity. 
 
 We chose the Mica-Mics dataset because it provides Schaefer200 parcellation as well, so we can use the same dataset here and in the experiments with TMS-EEG data (Chapter \ref{ch:pytepfit}). The Rosen and Halgren's group averaging method is selected because it seems that it sometimes (e. g. $SC_W$ and $SPE_W$ in Figure \ref{fig:ftract_alldata_long_amplitudes}) results in higher correlations than the other approaches.
 
@@ -79,7 +77,7 @@ Let us look closer at the correlations for response probability and amplitude in
 
 \subsubsection{Response probability}\label{sec:probability_F-Tract}
 
-Seguin et al. showed a correlation of response probability with Euclidean distance of approximately $0.6$. Figure \ref{fig:ftract_alldata_long_probabilities} shows that we found an even higher correlation. This might be caused by the fact that Seguin et al. excluded pairs of ROIs that are closer than 20 mm from the analysis. They also considered the responses up to 800 ms after the stimulation. The Supplementary material of their paper shows the results without the close pairs exclusion and with 200 ms responses; both are closer to ours. Therefore we think that these factors may be a cause of overall higher correlations in our results. We also tried to exclude the close pairs (\TODO[kde to najít]), the correlations were generally slightly lower in that case. 
+Seguin et al. showed a correlation of response probability with Euclidean distance of approximately $0.6$. Figure \ref{fig:ftract_alldata_long_probabilities} shows that we found an even higher correlation. This might be caused by the fact that Seguin et al. excluded pairs of ROIs that are closer than 20 mm from the analysis. They also considered the responses up to 800 ms after the stimulation. The Supplementary material of their paper shows the results without the close pairs exclusion and with 200 ms responses; both are closer to ours. Therefore we think that these factors may be a cause of overall higher correlations in our results. We also tried to exclude the close pairs (results can be found in attachments); the correlations were generally slightly lower in that case. 
 
 It can be seen in Figure \ref{fig:ftract_alldata_long_probabilities} that there are correlations between the response probability and structural connectivity and communication metrics. However, it is not possible to order all the metrics from the best to the worst one because of the differences in the input matrices (they differ in dataset and group-averaging method). Despite that, let us describe the main findings.
 
@@ -108,14 +106,14 @@ Comparing Figure \ref{fig:ftract_mica_short_probabilities} and Figure \ref{fig:f
 \begin{figure}
     \centering
     \includegraphics[width=0.93\textwidth]{images/nootebook_generated/ftract_results/MNI-HCP-MMP1/5/ED0/0.25/short/mica_rhSpearman_correlation_of_SC_network_communication_metrics_with_response_probabilities_in_F-Tract.pdf}
-    \caption[F-Tract probability correlations - Mica-Mics\_rh 50 ms]{Correlations (absolute value) of response probability (50~ms response) and structural connectivity and derived communication metrics. Asterisks denote a significant correlation ($p<0.05$).}
+    \caption[F-Tract probability correlations - Mica-Mics\_rh 50 ms]{Correlations (absolute value) of response probability (50~ms response) and structural connectivity and derived communication metrics. Asterisk denotes a significant correlation ($p<0.05$).}
     \label{fig:ftract_mica_short_probabilities}
 \end{figure}
 
 \begin{figure}
     \centering
     \includegraphics[width=0.93\textwidth]{images/nootebook_generated/ftract_results/MNI-HCP-MMP1/5/ED0/0.25/long/mica_rhSpearman_correlation_of_SC_network_communication_metrics_with_response_probabilities_in_F-Tract.pdf}
-    \caption[F-Tract probability correlations - Mica-Mics\_rh 200 ms]{Correlations (absolute value) of response probability (200~ms response) and structural connectivity and derived communication metrics. Asterisks denote a significant correlation ($p<0.05$).}
+    \caption[F-Tract probability correlations - Mica-Mics\_rh 200 ms]{Correlations (absolute value) of response probability (200~ms response) and structural connectivity and derived communication metrics. Asterisk denotes a significant correlation ($p<0.05$).}
     \label{fig:ftract_mica_long_probabilities}
 \end{figure}
 
@@ -138,18 +136,18 @@ Figure \ref{fig:ftract_mica_long_probabilities_L4} shows the results for the sti
 \begin{figure}
     \centering
     \includegraphics[width=\textwidth]{images/nootebook_generated/ftract_results_per_roi/long/MNI-HCP-MMP1/ED0/0.25/Spearman_correlation_of_SC_communication_metrics_and_response_probability_(stimulation_of_ROI_L_4).pdf}
-    \caption[F-Tract probability correlations - Mica-Mics\_rh L\_4]{Correlations (absolute value) of response probability (200~ms response) and structural connectivity and derived communication metrics. Asterisks denote a significant correlation ($p<0.05$).}
+    \caption[F-Tract probability correlations - Mica-Mics\_rh L\_4]{Correlations (absolute value) of response probability (200~ms response) and structural connectivity and derived communication metrics. Asterisk denotes a significant correlation ($p<0.05$).}
     \label{fig:ftract_mica_long_probabilities_L4}
 \end{figure}
 
-\subsection{Was the stimulation target really M1?}
+\subsection{Precise localization of stimulus site in parcellated data}
 
 Even though Biabani et al. \cite{biabani_characterizing_2019} declare they stimulated the primary motor cortex, the source-reconstruction of the TMS-EEG data by Momi et al. \cite{momi_tms-evoked_2023} suggest the stimulation of slightly different site, specifically L\_3b. This is further explained in Section \ref{sec:parcellations-mapping-stimulated_roi}. Here we just present the results for L\_3b stimulation in Figure \ref{fig:ftract_mica_long_probabilities_L3b}, so we can later use them for comparison.
 
 \begin{figure}
     \centering
     \includegraphics[width=\textwidth]{images/nootebook_generated/ftract_results_per_roi/long/MNI-HCP-MMP1/ED0/0.25/Spearman_correlation_of_SC_communication_metrics_and_response_probability_(stimulation_of_ROI_L_3b).pdf}
-    \caption[F-Tract probability correlations - Mica-Mics\_rh L\_3b]{Correlations (absolute value) of response probability (200~ms response) and structural connectivity and derived communication metrics. Asterisks denote a significant correlation ($p<0.05$).}
+    \caption[F-Tract probability correlations - Mica-Mics\_rh L\_3b]{Correlations (absolute value) of response probability (200~ms response) and structural connectivity and derived communication metrics. Asterisk denotes a significant correlation ($p<0.05$).}
     \label{fig:ftract_mica_long_probabilities_L3b}
 \end{figure}
 

@@ -18,13 +18,13 @@ This means that even though we might get some insight by studying the TMS-EEG fr
   \begin{center}
     \includegraphics[width=0.89\textwidth]{images/nootebook_generated/tmseeg_ftract_comparison_results/200ms/Spearman_correlation_of_SC_network_communication_metrics_with_response_in_TMS-EEG_and_probabilities_in_F-Tract.pdf}
   \end{center}
-  \caption[Comparison of correlations for F-Tract and TMS-EEG]{Comparison of correlations (absolute value) of response probability in F-Tract and TMS-EEG response characterized binary (01), by AUC and by the first peak latency (FPL) and structural connectivity and derived communication metrics. Asterisks denote a significant correlation ($p<0.05$). All the responses 200 ms long, structural connectivity based on Mica-Mics dataset with Rosen and Halgren's preprocessing. Threshold 8 in $z$-scored TMS-EEG.}
+  \caption[Comparison of correlations for F-Tract and TMS-EEG]{Comparison of correlations (absolute value) of response probability in F-Tract and TMS-EEG response characterized binary (01), by AUC and by the first peak latency (FPL) and structural connectivity and derived communication metrics. Asterisk denotes a significant correlation ($p<0.05$). All the responses 200 ms long, structural connectivity based on Mica-Mics dataset with Rosen and Halgren's preprocessing. Threshold 8 in $z$-scored TMS-EEG.}
   \label{fig:compare-correlations_F-Tract-TMS}
 \end{figure}
 
 \section{Parcellations mapping}\label{sec:dice}
 
-Direct comparison of the TMS-EEG and F-Tract results is not possible, because they do not share the same brain parcellation. The TMS-EEG dataset is published in Schaefer200 parcellation, which is not available for F-Tract. Because of that, it is necessary to find a mapping between Glasser and Schaefer200 parcellation.
+Direct comparison of the TMS-EEG and F-Tract results is not possible because they do not share the same brain parcellation. The TMS-EEG dataset is published in Schaefer200 parcellation, which is not available for F-Tract. Because of that, it is necessary to find a mapping between Glasser and Schaefer200 parcellation.
 
 Lawrence et al. published a paper \textit{Standardizing human brain parcellations} \cite{lawrence_standardizing_2021} discussing the issue of mapping between distinct brain parcellations. They propose the Dice coefficient \cite{dice_measures_1945} as a possibility of similarity evaluation between ROIs across parcellations. 
 
@@ -32,7 +32,7 @@ For two ROIs $A$ and $B$, each consisting of a set of voxels, the Dice coefficie
 $$
 \frac{2 \cdot |A\cap B|}{|A|+|B|}.
 $$
-the score is a ratio of the overlap of the regions to the sum of their sizes. It is higher for regions with a big overlap with respect to their sizes.
+The score is a ratio of the overlap of the regions to the sum of their sizes. It is higher for regions with a big overlap with respect to their sizes.
 
 Lawrence et al. provide a function for calculations of Dice scores between parcellations in Neuroparc repository at GitHub.\footnote{\url{https://github.com/neurodata/neuroparc/blob/5a5e7469671e65cb58087c47b69d0edb71dc2966/scripts/dice_correlation.py}} Using that, Dice score map between Schaefer200 and Glasser parcellations was created.
 
@@ -67,5 +67,5 @@ Figure \ref{fig:response_tmsAUC-ftract_scatter} shows the response probability i
     \includegraphics[width=\textwidth]{images/nootebook_generated/tmseeg_ftract_responses_comparison/FP/Response_probability_vs_first_peak_latency_in_TMS-EEG_in_Schaefer200_mapped_to_Glasser_parcellation.pdf}
   \end{center}
   \caption[F-Tract probabilities vs TMS-EEG first peak latency]{F-Tract probabilities vs TMS-EEG first peak latency for 200 ms response length and threshold 8 in TMS-EEG. ROIs labeled based on Glasser parcellation and colored based on Yeo7 network extracted from Schaefer200 parcellation, plotted if the response value not \texttt{nan} in both F-Tract and AUC. Each Glasser ROI was assigned to Schaefer200 ROI based on the highest Dice score.}
-  \label{response_tmsFP-ftract_scatter}
+  \label{fig:response_tmsFP-ftract_scatter}
 \end{figure}
