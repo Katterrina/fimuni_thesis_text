@@ -2,7 +2,7 @@
 
 All the presented results up to this point (with an exception in Chapter \ref{ch:ftract}) were obtained with structural connectivity matrices created using Rosen and Halgren's averaging method from Mica-Mics dataset. Let us look closer at the possible group-averaging methods and possible variations in structural matrices based on the data source and group-averaging methods. 
 
-\section{Minimal number of streamlines}
+\section{Minimal number of streamlines}\label{sec:min_streamlines}
 
 Having a structural connectivity matrix containing streamline counts as described in Section \ref{sec:edge_estimation}, we have to decide if it is enough to have one streamline connecting two regions to consider it as an edge. For example, Seguin et al. \cite{seguin_communication_2023} decided to prune connections comprising fewer than 5 streamlines. They justify this step with the high false positive rate of probabilistic tractography. Following their example, we did the same. In all the following group-averaging methods, we first discarded subject-level edges with less than 5 streamlines.
 
@@ -38,7 +38,7 @@ $$
 
 In practice, he resulting matrix was sometimes non-symmetric even if the individual subject matrices were symmetric. It was caused by numerical instability in Python while working with small numbers. To overcome this problem, we added $SC = (SC + SC^T) /2$ to the end of the procedure.
 
-\section{Structural connectome density}
+\section{Structural connectome density}\label{sc:density}
 
 Seguin et al. \cite{seguin_communication_2023} in the paper \textit{Communication dynamics in the human connectome shape the cortex-wide propagation of direct electrical stimulation} propose one more step in connectome construction. They prune the group-averaged connectivity matrices keeping the edges with the highest weight such that the density of the connectome is 25\%. 
 

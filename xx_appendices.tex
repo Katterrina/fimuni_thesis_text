@@ -1,3 +1,51 @@
-\chapter{Analysis implementation}
+\chapter{Implementation of the analysis}
 
-As a
+There is a repository in the attachments with all the codes to perform the analysis in the thesis. It consists of Juypetr notebooks that include the individual steps and their descriptions. It also contains a description of all data sources and all the figures generated during our work. We describe the structure of the repository here for better orientation. 
+
+\bigskip
+
+\dirtree{%
+.0 .
+.1 data.
+.2 external.
+.3 README.md \textit{(information about external data sources)}.
+.3 \ldots.
+.2 interim \textit{(data generated using the notebooks)}.
+.1 figures \textit{(figures generated using the notebooks)}.
+.2 ftract\_results. 
+.2 ftract\_results\_per\_roi.
+.2 tmseeg\_resluts.
+.2 tmseeg\_ftract\_comparison\_resluts.
+.2 tmseeg\_ftract\_response\_comparison.
+.2 sc\_comparison.
+.1 notebooks.
+.2 00\_structural\_connectivity.
+.2 01\_f-tract.
+.2 02\_pytepfit \textit{(notebooks related to TMS-EEG data)}.
+.2 03\_compare\_f-tract\_pytepfit.
+.2 XX\_centroids\_and\_parcellations.
+.1 src \textit{(data loaders, plotting functions etc.)}.
+}
+
+\bigskip
+
+The \texttt{figures} subdirectories contain the figures organized based on the specific parameters used to generate them, for example, the parcellation or the minimal number of streamlines to consider an edge between two regions, response length (in case of TMS-EEG) and others. Here we provide a list of the parameters with their possible values when applicable:
+
+\begin{itemize}
+    \item parcellation
+    \begin{itemize}
+        \item \texttt{DKT} (Deskian-Killiany parcellation)
+        \item \texttt{MNI-HCP-MMP1} (Glasser parcellation)
+        \item \texttt{schaefer} (Schaefer200 parcellation)
+    \end{itemize}
+    \item response length
+    \begin{itemize}
+        \item \texttt{long|short} (for F-Trcat results, indicating 50 ms or 200 ms responses)
+        \item \texttt{XXXms} (for TMS-EEG results, indicating the response length is \texttt{XXX} milliseconds)
+    \end{itemize}
+    \item minimal number of streamlines, see Section \ref{sec:min_streamlines}
+    \begin{itemize}
+        \item \texttt{long|short} (for F-Trcat results, indicating 50~ms or 200~ms responses)
+        \item \texttt{XXXms} (for TMS-EEG results, indicating the response length is \texttt{XXX} milliseconds)
+    \end{itemize}
+\end{itemize}
