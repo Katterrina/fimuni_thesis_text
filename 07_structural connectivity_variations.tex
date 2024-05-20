@@ -38,7 +38,7 @@ $$
 
 In practice, he resulting matrix was sometimes non-symmetric even if the individual subject matrices were symmetric. It was caused by numerical instability in Python while working with small numbers. To overcome this problem, we added $SC = (SC + SC^T) /2$ to the end of the procedure.
 
-\section{Structural connectome density}\label{sc:density}
+\section{Structural connectome density}\label{sec:density}
 
 Seguin et al. \cite{seguin_communication_2023} in the paper \textit{Communication dynamics in the human connectome shape the cortex-wide propagation of direct electrical stimulation} propose one more step in connectome construction. They prune the group-averaged connectivity matrices keeping the edges with the highest weight such that the density of the connectome is 25\%. 
 

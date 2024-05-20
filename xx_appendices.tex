@@ -1,9 +1,10 @@
 \chapter{Implementation of the analysis}
 
-There is a repository in the attachments with all the codes to perform the analysis in the thesis. It consists of Juypetr notebooks that include the individual steps and their descriptions. It also contains a description of all data sources and all the figures generated during our work. We describe the structure of the repository here for better orientation. 
+There is a repository in the attachments with all the codes to perform the analysis in the thesis. It consists of Juypetr notebooks that include the individual steps and their descriptions. The repository structure is described in Figure \ref{fig:repo-structure} for better orientation. 
 
-\bigskip
-
+\begin{figure}[!h]
+\centering
+\begin{minipage}{0.9\textwidth}
 \dirtree{%
 .0 .
 .1 data.
@@ -26,10 +27,14 @@ There is a repository in the attachments with all the codes to perform the analy
 .2 XX\_centroids\_and\_parcellations.
 .1 src \textit{(data loaders, plotting functions etc.)}.
 }
+    \end{minipage}
+    \caption{Repository structure}
+    \label{fig:repo-structure}
+\end{figure}
 
-\bigskip
+The repository also contains all the figures generated during our work in the \texttt{figures} folder. The folder's subdirectories contain the figures organized based on the specific parameters used to generate them, for example, the parcellation or the minimal number of streamlines to consider an edge between two regions, response length (in the case of TMS-EEG), and others. We provide a list of the parameters with their possible values below.
 
-The \texttt{figures} subdirectories contain the figures organized based on the specific parameters used to generate them, for example, the parcellation or the minimal number of streamlines to consider an edge between two regions, response length (in case of TMS-EEG) and others. Here we provide a list of the parameters with their possible values when applicable:
+\newpage
 
 \begin{itemize}
     \item parcellation
@@ -40,12 +45,32 @@ The \texttt{figures} subdirectories contain the figures organized based on the s
     \end{itemize}
     \item response length
     \begin{itemize}
-        \item \texttt{long|short} (for F-Trcat results, indicating 50 ms or 200 ms responses)
-        \item \texttt{XXXms} (for TMS-EEG results, indicating the response length is \texttt{XXX} milliseconds)
+        \item \texttt{long|short} indicating 50~ms or 200~ms responses, used for F-Trcat results
+        \item \texttt{XXXms} indicating the response length is \texttt{XXX} milliseconds, used for TMS-EEG results
     \end{itemize}
     \item minimal number of streamlines, see Section \ref{sec:min_streamlines}
     \begin{itemize}
-        \item \texttt{long|short} (for F-Trcat results, indicating 50~ms or 200~ms responses)
-        \item \texttt{XXXms} (for TMS-EEG results, indicating the response length is \texttt{XXX} milliseconds)
+        \item \texttt{min\_X\_streamlines}
     \end{itemize}
+    \item connectivity matrices density, see Section \ref{sec:density}
+    \begin{itemize}
+        \item \texttt{X\_density} 
+    \end{itemize}
+    \item close ROI pairs excluded, mentioned in Section \ref{sec:f-tract_data_description} (applied only for F-Tract dataset)
+    \begin{itemize}
+        \item \texttt{EDX} ROIs closer than \texttt{X} mm excluded from the analysis 
+    \end{itemize}
+    \item the usage of empirical or simulated data (for TMS-EEG)
+    \begin{itemize}
+        \item \texttt{empirical|simulated} 
+    \end{itemize} 
+    \item response characteristic in TMS-EEG (for TMS-EEG and F-Tract response comparison)
+    \begin{itemize}
+        \item \texttt{AUC} 
+        \item \texttt{FP} first peak latency 
+    \end{itemize} 
+    \item how to handle response for ROI when it does not exceed a threshold in TMS-EEG, see Section \ref{sec:reponse_definition} (for TMS-EEG)
+    \begin{itemize}
+        \item \texttt{not\_over\_threshold\_[0|nan]}, if \texttt{nan}, the region is not included in the analysis
+    \end{itemize} 
 \end{itemize}

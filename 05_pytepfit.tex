@@ -2,7 +2,7 @@
 
 The main goal of this thesis is to apply the approach by Seguin et al. \cite{seguin_communication_2023} rooted in complex network analysis and compare its applicability in empirical and simulated EEG recordings of TMS evoked potentials. As explained in Section \ref{sec:tms-eeg_measurement}, the TMS-EEG measurement is indirect; it does not require the implantation of electrodes in the brain. Because of that, it is easier to use it in research, but it is less precise. We want to see if it is possible to get an insight into the response structure using the communication models for TMS-EEG data similarly as it was presented in Sections \ref{sec:ftract_results} and \ref{sec:ftract_results_per_roi} for iEEG data. 
 
-\section{TMS-EEG data}\label{sec:reponse_definition}
+\section{TMS-EEG data}
 
 There are several key differences between the summarized iEEG functional data available in F-Tract and the TMS-EEG data used in this section. 
 
@@ -36,7 +36,7 @@ The resulting simulated data are plotted in Figure \ref{fig:tms-simulated-data}.
     \label{fig:tms-simulated-data}
 \end{figure}
 
-\subsection{Quantification of TMS-EEG response}
+\subsection{Quantification of TMS-EEG response}\label{sec:reponse_definition}
 
 To follow the methodology used by Seguin et al. for the F-Tract data, it is necessary to decide how to quantify the time series of each ROI and, followingly, create a vector characterizing the response in the whole brain. We can not use the probability of the response because the TEPs were measured only in 20 subjects and we have the group-averaged data.
 
