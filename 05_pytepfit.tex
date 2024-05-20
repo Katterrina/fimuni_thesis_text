@@ -12,12 +12,12 @@ Besides empirical data, we work with simulated TMS-EEG data, and we compare the 
 
 \subsection{Empirical data}
 
-We used TMS-EEG data published by the Rogasch group\footnote{\url{https://figshare.com/articles/dataset/TEPs-_SEPs/7440713}} \cite{biabani_characterizing_2019} where high-density EEG was recorded following M1 stimulation in 20 healthy young individuals. TMS-EEG evoked potential (TEP) source reconstruction was performed by Momi et al. \cite{momi_tms-evoked_2023}, resulting in group-averaged time series, one time series per ROI in Schaefer200 parcellation. See Figure \ref{fig:tms-empirical-data}. 
+We used TMS-EEG data published by the Rogasch group\footnote{\url{https://figshare.com/articles/dataset/TEPs-_SEPs/7440713}} \cite{biabani_characterizing_2019} where high-density EEG was recorded following M1 stimulation in 20 healthy young individuals. TMS-EEG evoked potential (TEP) source reconstruction was performed by Momi et al. \cite{momi_tms-evoked_2023}, resulting in group-averaged time series, one time series per ROI in Schaefer200 parcellation (\ref{parc:Schaefer200}). See Figure \ref{fig:tms-empirical-data}. 
 
 \begin{figure}
     \centering
     \includegraphics[width=\textwidth]{images/nootebook_generated/pytepfit_results/empirical/200/not_over_threshold_nan/data.pdf}
-    \caption[TMS-EEG empirical data]{TMS-EEG empirical data, stimulation at 100 ms after the start of the measurement. The TEPs are colored based on Yeo7 functional networks. EEG source reconstructed, baseline corrected, and $z$-scored.}
+    \caption[TMS-EEG empirical data]{TMS-EEG empirical data, stimulation at 100 ms after the start of the measurement. The TEPs are colored based on Yeo7 (\ref{parc:Yeo}) functional networks. EEG source reconstructed, baseline corrected, and $z$-scored.}
     \label{fig:tms-empirical-data}
 \end{figure}
 
@@ -25,7 +25,7 @@ We used TMS-EEG data published by the Rogasch group\footnote{\url{https://figsha
 
 Besides the source-reconstructed empirical TEPs, Momi et al. published simulated TEPs. The whole modeling process is described in their paper \textit{TMS-evoked responses are driven by recurrent large-scale network dynamics} \cite{momi_tms-evoked_2023}. 
 
-Briefly, the model consists of 200 brain regions (based on Schaefer200 parcellation) connected by weights of some anatomical connectivity matrix. The nodes represent the averaged activity of the specific brain region and activity in each node is modeled using a set of equations. \cite{deco_perturbation_2018} Then, the model was fitted to the empirical data of each subject, and the resulting TEPs were averaged. \cite{momi_tms-evoked_2023}
+Briefly, the model consists of 200 brain regions (based on Schaefer200 parcellation) connected by weights of an anatomical connectivity matrix. The nodes represent the averaged activity of the specific brain region and the activity in each node is modeled using a set of equations. \cite{deco_perturbation_2018} Then, the model was fitted to the empirical data of each subject, and the resulting TEPs were averaged. \cite{momi_tms-evoked_2023}
 
 The resulting simulated data are plotted in Figure \ref{fig:tms-simulated-data}. We see that the TEPs are much smoother than the empirical in Figure \ref{fig:tms-empirical-data}.
 
@@ -40,7 +40,7 @@ The resulting simulated data are plotted in Figure \ref{fig:tms-simulated-data}.
 
 To follow the methodology used by Seugin et al. for the F-TRACT data, it is necessary to decide how to quantify the time series of each ROI and, followingly, create a vector characterizing the response in the whole brain. We can not use the probability of the response because the TEPs were measured only in 20 subjects and we have the group-averaged data.
 
-This section discusses all the options used later in the work.\footnote{We considered also variance, mean, difference of lowes and highest value, AUC of the area above the threshold, etc., but we did not include them because they are very similar to the ones in the list.} They are also visualized in Figure \ref{fig:tms-respondse-definition}.
+This section discusses all the options used later in the work. They are also visualized in Figure \ref{fig:tms-respondse-definition}.
 
 \begin{itemize}
     \item \textbf{binary (01) response} If the TEP exceeds a predefined threshold, the value is set to 1, otherwise it is set to 0.
@@ -48,6 +48,8 @@ This section discusses all the options used later in the work.\footnote{We consi
     \item \textbf{first/highest peak time} The weight of the response is defined as the time when the first/highest peak above a predefined threshold occurs. If the TEP does not exceed the threshold, it is set to \texttt{nan} and is not considered in the analysis. The idea behind this definition is that we assume the response to propagate faster to regions that are \uv{more} connected (for example, there are edges with higher weights or shorter lengths in structural connectome).
     \item \textbf{AUC} The weight of the response is defined as the area under the curve if the curve exceeds a predefined threshold, \texttt{nan} otherwise. The key idea of this definition is that AUC captures the overall \uv{power} of the response. It is systematically different from the other definitions, so it might reveal different relationships.
 \end{itemize}
+
+We considered also variance, mean, difference of the lowest and the highest value, AUC of the area above the threshold, etc., but we did not include them because they are very similar to the ones in the list.
 
 \begin{figure}
     \centering
@@ -58,11 +60,11 @@ This section discusses all the options used later in the work.\footnote{We consi
 
 \subsubsection{Threshold selection}
 
-All the response definitions work with some threshold. There is always a baseline activity in the brain, as shown in Figure \ref{fig:tms-empirical-data} before the stimulation. We need to filter out the activity after the stimulation caused by this natural process and keep only responses truly evoked by the TMS stimulation. However, there is nothing like \uv{the right threshold} and it depends on the specific data used in each case. Because of that, we tried several thresholds, the lowest corresponding to the highest peak in the activity before the stimulation and the highest selected such that there are at least 30 TEPs over that threshold.
+All the response definitions work with some threshold. There is always a baseline activity in the brain, as shown in Figure \ref{fig:tms-empirical-data} before the stimulation. We need to filter out the activity after the stimulation caused by this natural process and keep only responses truly evoked by the TMS stimulation. However, there is nothing like \uv{the right threshold} and it depends on the specific data used in each case. Because of that, we tried several thresholds, the lowest corresponding to the highest peak in the activity before the stimulation and the highest selected such that there are at least 30 TEPs over that threshold to keep enough data for statistics.
 
 \subsubsection{Response length}
 
-Besides the threshold, it is important to select the length of the response we want to consider. The later responses can be confounded by the auditory stimulus (loud TMS click), and somatosensory responses (activation of cranial nerves). \cite{hernandez-pavon_tms_2023} On the other hand, as shown in Section \ref{sec:response-length_F-Tract} the earlier responses might be driven simply by the Euclidean distance. We tried several response lengths, including 50 ms and 200 ms, which gave us results comparable to those obtained using F-TRACT.
+Besides the threshold, it is important to select the length of the response we want to consider. The later responses can be confounded by the auditory stimulus (loud TMS click), and somatosensory responses i.e., activation of cranial nerves). \cite{hernandez-pavon_tms_2023} On the other hand, as shown in Section \ref{sec:response-length_F-Tract}, the earlier responses might be driven simply by the Euclidean distance. We tried several response lengths, including 50 ms and 200 ms, which gave us results comparable to those obtained using F-TRACT.
 
 \section{Results for empirical data}\label{sec:results_pytepfit-empirical}
 
