@@ -24,6 +24,8 @@ Our experiments are limited by several aspects of the used TMS-EEG data. First o
 
 Another limitation comes with the fact that the TMS-EEG data are group-averaged. It would be interesting to do the analysis on a subject level because group averaging of the time series could veil some aspects of the TMS-evoked response.
 
-\TODO[možná něco o tom, že jsem všechny výsledky potvrdili s víc maticemi?]
+We performed a robustness analysis for all the results. We confirmed that the correlations are not dependent on specific structural connectivity dataset. Regarding the group averaging method, it seems to us that the Rosen and Halgren's method is the best choice in this case. However, the differences are small and further analysis would be needed to confirm that. We also tried to use different parcellation for F-TRACT dataset, which shows the importance of parcellation selection.
 
+And what about the question raised in Chapter \ref{ch:networks}, asking if the centralized models
+explain communication within the brain better than decentralized ones? Our results show the highest correlation of the response with the most common centralized communication models, shortest path efficiency, for both F-TRACT and TMS-EEG data. It is followed by navigation efficiency, which is centralized metric as well. However, the success of navigation efficiency might be mainly caused by the fact that it utilizes Euclidean distance, which itself correlates with the responses very well.
 
